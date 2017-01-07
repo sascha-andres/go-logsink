@@ -21,3 +21,9 @@ To send data to the server you have to start at least one client. For example to
     sudo tail -f /var/log/syslog | go-logsink connect --address "localhost:55555"
 
 Using the `address` flag it is possible to send data to the non default destination (`localhost:50051`)
+
+An advanced usage would be to forward all logs from running docker containers:
+
+    docker logs -f $(docker ps -q) | go-logsink connect &
+
+This assumes a runnint go-logsink server at localhost:50051
