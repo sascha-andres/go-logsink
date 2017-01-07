@@ -1,0 +1,21 @@
+/// Defines simple messages to run the logsink server and client
+syntax = "proto3";
+
+package logsink;
+
+/// LogTransfer service defines the method(s) used to send
+/// messages from client to server
+service LogTransfer {
+  /// SendLine sends a log line to the server
+  rpc SendLine(LineMessage) returns (LineResult) {} 
+}
+
+/// The single line message
+message LineMessage {
+  string line = 1;
+}
+
+/// Result of the log send
+message LineResult {
+  bool result = 1;
+}
