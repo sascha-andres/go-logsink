@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"log"
@@ -12,20 +12,17 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-const (
-	port = ":50051"
-)
-
-// server is used to implement helloworld.GreeterServer.
+// server is used to implement logsink.LogTransferServer.
 type server struct{}
 
-// SayHello implements helloworld.GreeterServer
+// SendLine implements logsink.SendLine
 func (s *server) SendLine(ctx context.Context, in *pb.LineMessage) (*pb.LineResult, error) {
 	fmt.Println(in.Line)
 	return &pb.LineResult{Result: true}, nil
 }
 
-func main() {
+// Listen starts the server
+func Listen(port string) {
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
