@@ -44,8 +44,4 @@ jsconfig.json
 # End of https://www.gitignore.io/api/go,code
 
 *.pb.go
-client/client
-server/server
-
-client/lsserver
-client/lsclient
+go-logsink
