@@ -22,13 +22,9 @@ import (
 // connectCmd represents the connect command
 var connectCmd = &cobra.Command{
 	Use:   "connect",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Connect to a go-logsink server and forward stdin",
+	Long: `This command is used to connect to a go-logsink server.
+Call it to forward data piped ito this application to the server.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client.Connect("localhost:50051")
 	},
