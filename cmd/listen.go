@@ -1,5 +1,4 @@
-// Copyright © 2017 NAME HERE <EMAIL ADDRESS>
-//
+// Copyright © 2017 Sascha Andres <sascha.andres@outlook.com>
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -26,21 +25,11 @@ var listenCmd = &cobra.Command{
 	Long: `This command is used to create a go-logsink server.
 Call it to have clients forward log messages here.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		server.Listen(":50051")
+		server.Listen(cmd.Flag("bind").Value.String())
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(listenCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// listenCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// listenCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
+	listenCmd.Flags().StringP("bind", "b", ":50051", "Provide bind definition")
 }
