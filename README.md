@@ -1,5 +1,7 @@
 # go-logsink
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/sascha-andres/go-logsink)](https://goreportcard.com/report/github.com/sascha-andres/go-logsink) [![codebeat badge](https://codebeat.co/badges/6e2d5bf5-5ca2-41a3-842d-631ba32d196c)](https://codebeat.co/projects/github-com-sascha-andres-go-logsink)
+
 ## What is go-logsink
 
 go-logsink is a client and server application to aggregate multiple steams into one.
