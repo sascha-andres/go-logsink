@@ -32,9 +32,7 @@ var RootCmd = &cobra.Command{
 into one. For example you can combine multiple tails into one
 output.
 
-To do this start a server and connect any number of clients.
-
-TODO: show sample`,
+To do this start a server and connect any number of clients.`,
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.
