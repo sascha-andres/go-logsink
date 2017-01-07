@@ -1,4 +1,4 @@
-// Copyright © 2017 NAME HERE <EMAIL ADDRESS>
+// Copyright © 2017 Sascha Andres <sascha.andres@outlook.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,21 +26,11 @@ var connectCmd = &cobra.Command{
 	Long: `This command is used to connect to a go-logsink server.
 Call it to forward data piped ito this application to the server.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		client.Connect("localhost:50051")
+		client.Connect(cmd.Flag("address").Value.String())
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(connectCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// connectCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// connectCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
+	connectCmd.Flags().StringP("address", "a", "localhost:50051", "Provide server address")
 }
