@@ -28,7 +28,9 @@ var cfgFile string
 var RootCmd = &cobra.Command{
 	Use:   "go-logsink",
 	Short: "go-logsink is a simplistic log aggregator",
-	Long: `You can use go-logsink to combine multiple log streams
+	Long: `Version: 20170107
+
+You can use go-logsink to combine multiple log streams
 into one. For example you can combine multiple tails into one
 output.
 
