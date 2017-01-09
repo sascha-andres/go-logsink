@@ -24,6 +24,23 @@ Using the `address` flag it is possible to send data to the non default destinat
 
 An advanced usage would be to forward all logs from running docker containers:
 
-    docker logs -f $(docker ps -q) | go-logsink connect &
+    for cont in `docker ps -q`; do
+        docker logs -f $cont | go-logsink connect &
+    done
 
-This assumes a runnint go-logsink server at localhost:50051
+This assumes a running go-logsink server at localhost:50051
+
+## Develop
+
+The applicatin uses a very simple protocol buffer based RPC service to communicate. You should install Protocol Buffers v3.1.0
+from https://github.com/google/protobuf/releases/tag/v3.1.0 ( used to create this project initially ).
+
+The Makefile contains a `protobuf` target which creates the implementation from the specification ( located in `logsink/logsink.proto` ).
+
+The project uses govendor ( https://github.com/kardianos/govendor ) to populate the vedor directory. Use `govendor sync` to download the libraries. This can take quite a while.
+
+### Cross compiling Windows
+
+current state: untested binary
+
+You have to `go get github.com/inconshreveable/mousetrap` before you can crosscompile.
