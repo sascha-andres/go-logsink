@@ -28,13 +28,13 @@ var cfgFile string
 var RootCmd = &cobra.Command{
 	Use:   "go-logsink",
 	Short: "go-logsink is a simplistic log aggregator",
-	Long: `You can use go-logsink to combine multiple log streams
+	Long: `Version: 20170110
+
+You can use go-logsink to combine multiple log streams
 into one. For example you can combine multiple tails into one
 output.
 
-To do this start a server and connect any number of clients.
-
-TODO: show sample`,
+To do this start a server and connect any number of clients.`,
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.
