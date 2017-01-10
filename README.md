@@ -46,7 +46,7 @@ Create a server on your-machine:
 
 Create a relay on man-in-the-middle:
 
-    go-logsink relay --bind ":50051" -- address "your-machine:50051"
+    go-logsink relay --bind ":50051" --address "your-machine:50051"
 
 Create a client on server:
 
