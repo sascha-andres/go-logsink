@@ -30,6 +30,28 @@ An advanced usage would be to forward all logs from running docker containers:
 
 This assumes a running go-logsink server at localhost:50051
 
+## Relay
+
+If you want to forward data from one network to another you can do this using the relay method.
+
+    |---------|      |-------|      |--------|
+    |  client | ---> | relay | ---> | server |
+    |---------|      |-------|      |--------|
+
+Simple put: a relay is an instance acting as both a server and a client.
+
+Create a server on your-machine:
+
+    go-logsink listen --bind ":50051"
+
+Create a relay on man-in-the-middle:
+
+    go-logsink relay --bind ":50051" -- address "your-machine:50051"
+
+Create a client on server:
+
+    go-logsink connect --address "man-in-the-middle:50051"
+
 ## Develop
 
 The applicatin uses a very simple protocol buffer based RPC service to communicate. You should install Protocol Buffers v3.1.0
