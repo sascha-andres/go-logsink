@@ -14,8 +14,11 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/sascha-andres/go-logsink/server"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // listenCmd represents the listen command
@@ -25,11 +28,14 @@ var listenCmd = &cobra.Command{
 	Long: `This command is used to create a go-logsink server.
 Call it to have clients forward log messages here.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		server.Listen(cmd.Flag("bind").Value.String())
+		bind := cmd.Flag("bind").Value.String()
+		fmt.Printf("Binding definition provided: %s\n", bind)
+		server.Listen(bind)
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(listenCmd)
 	listenCmd.Flags().StringP("bind", "b", ":50051", "Provide bind definition")
+	viper.BindPFlag("bind", listenCmd.Flags().Lookup("bind"))
 }
