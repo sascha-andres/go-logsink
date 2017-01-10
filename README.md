@@ -34,9 +34,9 @@ This assumes a running go-logsink server at localhost:50051
 
 If you want to forward data from one network to another you can do this using the relay method.
 
-    |---------|      |-------|      |--------|
-    |  client | ---> | relay | ---> | server |
-    |---------|      |-------|      |--------|
+    |--------|      |-------|      |--------|
+    | client | ---> | relay | ---> | server |
+    |--------|      |-------|      |--------|
 
 Simple put: a relay is an instance acting as both a server and a client.
 
