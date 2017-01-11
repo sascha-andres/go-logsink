@@ -15,12 +15,10 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
-	"os"
-	"os/signal"
 
-	"github.com/sascha-andres/go-logsink/client"
-	"github.com/sascha-andres/go-logsink/server"
+	"github.com/sascha-andres/go-logsink/relay"
 	"github.com/spf13/cobra"
 )
 
@@ -34,20 +32,10 @@ the messages to another go-logsink instance`,
 		if "" == address {
 			log.Fatalf("You have to provide the address flag")
 		}
-		go client.Connect(address)
-		go server.Listen(cmd.Flag("bind").Value.String())
-
-		sig := make(chan os.Signal)
-		signal.Notify(sig, os.Interrupt)
-
-		for {
-			select {
-			case <-sig:
-				log.Println("signal received, stopping")
-				os.Exit(0)
-			}
-		}
-
+		fmt.Printf("Connecting to %s\n", address)
+		bind := cmd.Flag("bind").Value.String()
+		fmt.Printf("Binding definition provided: %s\n", bind)
+		relay.Relay(bind, address)
 	},
 }
 
