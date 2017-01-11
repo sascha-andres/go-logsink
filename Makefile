@@ -1,4 +1,4 @@
-application: protobuf
+linux: protobuf
 	-mkdir -p build/linux_amd64
 	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-s' -o build/linux_amd64/gologsink
 	tar cvzf build/linux_amd64.tgz build/linux_amd64/go-logsink
@@ -12,3 +12,5 @@ windows:
 	zip build/windows.zip build/windows/go-logsink.exe
 protobuf:
 	protoc -I logsink/ logsink/logsink.proto --go_out=plugins=grpc:logsink
+
+all: linux osx windows
