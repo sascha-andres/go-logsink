@@ -28,7 +28,7 @@ var listenCmd = &cobra.Command{
 	Long: `This command is used to create a go-logsink server.
 Call it to have clients forward log messages here.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		bind := cmd.Flag("bind").Value.String()
+		bind := viper.GetString("bind")
 		fmt.Printf("Binding definition provided: %s\n", bind)
 		server.Listen(bind)
 	},

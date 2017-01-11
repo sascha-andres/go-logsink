@@ -20,6 +20,7 @@ import (
 
 	"github.com/sascha-andres/go-logsink/relay"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var relayCmd = &cobra.Command{
@@ -28,12 +29,12 @@ var relayCmd = &cobra.Command{
 	Long: `Instead of dumping incoming messages a relay forwards
 the messages to another go-logsink instance`,
 	Run: func(cmd *cobra.Command, args []string) {
-		address := cmd.Flag("address").Value.String()
+		address := viper.GetString("address")
 		if "" == address {
 			log.Fatalf("You have to provide the address flag")
 		}
 		fmt.Printf("Connecting to %s\n", address)
-		bind := cmd.Flag("bind").Value.String()
+		bind := viper.GetString("bind")
 		fmt.Printf("Binding definition provided: %s\n", bind)
 		relay.Relay(bind, address)
 	},
@@ -44,4 +45,6 @@ func init() {
 
 	relayCmd.Flags().StringP("bind", "b", ":50051", "Binding definition")
 	relayCmd.Flags().StringP("address", "a", "", "Address to connect to")
+	viper.BindPFlag("bind", listenCmd.Flags().Lookup("bind"))
+	viper.BindPFlag("address", listenCmd.Flags().Lookup("address"))
 }
