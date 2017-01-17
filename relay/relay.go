@@ -5,6 +5,7 @@ import (
 	"net"
 
 	pb "github.com/sascha-andres/go-logsink/logsink"
+	"github.com/spf13/viper"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -24,16 +25,16 @@ func (s *relayServer) SendLine(ctx context.Context, in *pb.LineMessage) (*pb.Lin
 }
 
 // Relay starts a server and connects to a client
-func Relay(port, address string) {
+func Relay() {
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	conn, err := grpc.Dial(viper.GetString("relay.address"), grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
 	c = pb.NewLogTransferClient(conn)
 
-	lis, err := net.Listen("tcp", port)
+	lis, err := net.Listen("tcp", viper.GetString("relay.bind"))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
