@@ -17,7 +17,11 @@ package web
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"os"
 
+	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 	pb "github.com/sascha-andres/go-logsink/logsink"
 	"github.com/spf13/viper"
 )
@@ -35,4 +39,9 @@ func (s *server) SendLine(ctx context.Context, in *pb.LineMessage) (*pb.LineResu
 func Start() {
 	fmt.Printf("Binding definition provided: %s\n", viper.GetString("web.bind"))
 	fmt.Printf("Serving at: %s\n", viper.GetString("web.serve"))
+
+	r := mux.NewRouter()
+	r.PathPrefix("/").Handler(handlers.LoggingHandler(os.Stdout, http.FileServer(http.Dir("./www"))))
+	http.Handle("/", r)
+	http.ListenAndServe(viper.GetString("web.serve"), nil)
 }
