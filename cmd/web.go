@@ -15,8 +15,7 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/sascha-andres/go-logsink/web"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -31,7 +30,7 @@ to see the logs in your browser.
 
   go-logsink web --serve ":80" --bind ":50051"`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("web called")
+		web.Start()
 	},
 }
 
