@@ -1,6 +1,6 @@
 linux: protobuf
 	-mkdir -p build/linux_amd64
-	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-s' -o build/linux_amd64/gologsink
+	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-s' -o build/linux_amd64/go-logsink
 	tar cvzf build/linux_amd64.tgz build/linux_amd64/go-logsink
 osx:
 	-mkdir -p build/darwin
