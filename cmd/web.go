@@ -15,26 +15,29 @@
 package cmd
 
 import (
-	"github.com/sascha-andres/go-logsink/client"
+	"github.com/sascha-andres/go-logsink/web"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
-// connectCmd represents the connect command
-var connectCmd = &cobra.Command{
-	Use:   "connect",
-	Short: "Connect to a go-logsink server and forward stdin",
-	Long: `This command is used to connect to a go-logsink server.
-Call it to forward data piped ito this application to the server.`,
+// webCmd represents the web command
+var webCmd = &cobra.Command{
+	Use:   "web",
+	Short: "Start a server instance with a web interface",
+	Long: `Use web to start a web server. Navigate with your favorite
+browser to localhost:8080 ( change the binding definition )
+to see the logs in your browser.
+
+  go-logsink web --serve ":80" --bind ":50051"`,
 	Run: func(cmd *cobra.Command, args []string) {
-		client.Connect()
+		web.Start()
 	},
 }
 
 func init() {
-	RootCmd.AddCommand(connectCmd)
-	connectCmd.Flags().StringP("address", "a", "localhost:50051", "Provide server address")
-	connectCmd.Flags().StringP("prefix", "p", "", "Provide a prefix for each line")
-	viper.BindPFlag("connect.address", connectCmd.Flags().Lookup("address"))
-	viper.BindPFlag("connect.prefix", connectCmd.Flags().Lookup("prefix"))
+	RootCmd.AddCommand(webCmd)
+	webCmd.Flags().StringP("bind", "b", ":50051", "Provide bind definition")
+	webCmd.Flags().StringP("serve", "s", ":8080", "Provide bind definition")
+	viper.BindPFlag("web.bind", webCmd.Flags().Lookup("bind"))
+	viper.BindPFlag("web.serve", webCmd.Flags().Lookup("serve"))
 }

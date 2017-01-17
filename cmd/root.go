@@ -28,9 +28,7 @@ var cfgFile string
 var RootCmd = &cobra.Command{
 	Use:   "go-logsink",
 	Short: "go-logsink is a simplistic log aggregator",
-	Long: `Version: 20170110
-
-You can use go-logsink to combine multiple log streams
+	Long: `You can use go-logsink to combine multiple log streams
 into one. For example you can combine multiple tails into one
 output.
 
@@ -64,6 +62,7 @@ func initConfig() {
 
 	viper.SetConfigName(".go-logsink") // name of config file (without extension)
 	viper.AddConfigPath("$HOME")       // adding home directory as first search path
+	viper.AddConfigPath(".")           // look in currect directory for config
 	viper.AutomaticEnv()               // read in environment variables that match
 
 	// If a config file is found, read it in.

@@ -15,26 +15,29 @@
 package cmd
 
 import (
-	"github.com/sascha-andres/go-logsink/client"
+	"fmt"
+
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
-// connectCmd represents the connect command
-var connectCmd = &cobra.Command{
-	Use:   "connect",
-	Short: "Connect to a go-logsink server and forward stdin",
-	Long: `This command is used to connect to a go-logsink server.
-Call it to forward data piped ito this application to the server.`,
+const (
+	version = "20170117"
+)
+
+// versionCmd represents the version command
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "Print out the currect version",
+	Long: `Print out the version.
+
+Version tag has format YYYYMMDD, where YYYY is the year, MM the month and DD the 
+day of the release.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		client.Connect()
+		// TODO: Work your own magic here
+		fmt.Printf("go-loginsk version %s\n", version)
 	},
 }
 
 func init() {
-	RootCmd.AddCommand(connectCmd)
-	connectCmd.Flags().StringP("address", "a", "localhost:50051", "Provide server address")
-	connectCmd.Flags().StringP("prefix", "p", "", "Provide a prefix for each line")
-	viper.BindPFlag("connect.address", connectCmd.Flags().Lookup("address"))
-	viper.BindPFlag("connect.prefix", connectCmd.Flags().Lookup("prefix"))
+	RootCmd.AddCommand(versionCmd)
 }

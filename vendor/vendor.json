@@ -3,6 +3,12 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "ntacCkWfMT63DaehXLG5FeXWyNM=",
+			"path": "github.com/cpuguy83/go-md2man/md2man",
+			"revision": "a65d4d2de4d5f7c74868dfa9b202a3c8be315aaa",
+			"revisionTime": "2016-09-04T16:08:59Z"
+		},
+		{
 			"checksumSHA1": "hveFTNQ9YEyYRs6SWuXM+XU9qRI=",
 			"path": "github.com/fsnotify/fsnotify",
 			"revision": "fd9ec7deca8bf46ecd2a795baaacf2b3a9be1197",
@@ -19,6 +25,30 @@
 			"path": "github.com/golang/protobuf/protoc-gen-go/descriptor",
 			"revision": "8ee79997227bf9b34611aee7946ae64735e6fd93",
 			"revisionTime": "2016-11-17T03:31:26Z"
+		},
+		{
+			"checksumSHA1": "g/V4qrXjUGG9B+e3hB+4NAYJ5Gs=",
+			"path": "github.com/gorilla/context",
+			"revision": "08b5f424b9271eedf6f9f0ce86cb9396ed337a42",
+			"revisionTime": "2016-08-17T18:46:32Z"
+		},
+		{
+			"checksumSHA1": "I+GdpjQMP4tAYwF4CAklylRWeYI=",
+			"path": "github.com/gorilla/handlers",
+			"revision": "3a5767ca75ece5f7f1440b1d16975247f8d8b221",
+			"revisionTime": "2016-12-06T05:51:44Z"
+		},
+		{
+			"checksumSHA1": "urMd7A9QPAJYY0GZJL9qBhlUmD8=",
+			"path": "github.com/gorilla/mux",
+			"revision": "757bef944d0f21880861c2dd9c871ca543023cba",
+			"revisionTime": "2016-09-20T23:08:13Z"
+		},
+		{
+			"checksumSHA1": "fsmoUOKo3g/iBB+YcmgoaMG8Rlk=",
+			"path": "github.com/gorilla/websocket",
+			"revision": "adf16b31781325cbd41085c5be901d95b4d1f33d",
+			"revisionTime": "2017-01-01T04:13:41Z"
 		},
 		{
 			"checksumSHA1": "Ok3Csn6Voou7pQT6Dv2mkwpqFtw=",
@@ -105,6 +135,20 @@
 			"revisionTime": "2016-12-29T18:51:04Z"
 		},
 		{
+			"checksumSHA1": "JdYdBoNxMR+CDqTfs78cQmY8JtI=",
+			"origin": "github.com/cpuguy83/go-md2man/vendor/github.com/russross/blackfriday",
+			"path": "github.com/russross/blackfriday",
+			"revision": "a65d4d2de4d5f7c74868dfa9b202a3c8be315aaa",
+			"revisionTime": "2016-09-04T16:08:59Z"
+		},
+		{
+			"checksumSHA1": "XXTR/ftEYSqQn4+Y7wNfiJJmq9U=",
+			"origin": "github.com/cpuguy83/go-md2man/vendor/github.com/shurcooL/sanitized_anchor_name",
+			"path": "github.com/shurcooL/sanitized_anchor_name",
+			"revision": "a65d4d2de4d5f7c74868dfa9b202a3c8be315aaa",
+			"revisionTime": "2016-09-04T16:08:59Z"
+		},
+		{
 			"checksumSHA1": "iGmLeUVcmiFgd4/iK2Tmx7WIoa4=",
 			"path": "github.com/spf13/afero",
 			"revision": "90dd71edc4d0a8b3511dc12ea15d617d03be09e0",
@@ -127,6 +171,12 @@
 			"path": "github.com/spf13/cobra",
 			"revision": "de09d9ce07d0d8a74442cfeaa91628cf9492cc23",
 			"revisionTime": "2016-12-22T15:12:50Z"
+		},
+		{
+			"checksumSHA1": "Ex1NV6SzevyxaYwwWwTdW1CKXEo=",
+			"path": "github.com/spf13/cobra/doc",
+			"revision": "1dd5ff2e11b6dca62fdcb275eb804b94607d8b06",
+			"revisionTime": "2016-09-04T11:42:13Z"
 		},
 		{
 			"checksumSHA1": "HWDERqbEvvfLwzP7Dvh2fvu+sng=",
