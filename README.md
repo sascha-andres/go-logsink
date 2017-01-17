@@ -82,4 +82,8 @@ Rudimentary tests were done, no in depth testing, though
 
 |Version|Description|
 |---|---|
+|20170117|Web endpoint|
+||doc command|
+||version command|
+||Allow providing a prefix|
 |20170110|Initial version|
