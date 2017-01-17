@@ -30,6 +30,12 @@ An advanced usage would be to forward all logs from running docker containers:
 
 This assumes a running go-logsink server at localhost:50051
 
+You can even start a webserver using
+
+    go-logsink web
+
+More usage: See [go-logsink documentation](docs/go-logsink.md)
+
 ## Relay
 
 If you want to forward data from one network to another you can do this using the relay method.
@@ -66,3 +72,14 @@ The project uses govendor ( https://github.com/kardianos/govendor ) to populate 
 current state: untested binary
 
 You have to `go get github.com/inconshreveable/mousetrap` before you can crosscompile.
+
+### OSX
+
+You can crosscompile OSX or download the darwin.tgz from the releases.
+Rudimentary tests were done, no in depth testing, though
+
+## History
+
+|Version|Description|
+|---|---|
+|20170110|Initial version|
