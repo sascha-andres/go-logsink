@@ -15,24 +15,31 @@
 package web
 
 import (
-	"context"
 	"fmt"
+	"html/template"
+	"log"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	pb "github.com/sascha-andres/go-logsink/logsink"
 	"github.com/spf13/viper"
 )
 
-// server is used to implement logsink.LogTransferServer.
-type server struct{}
+//var jsTemplate = template.Must(template.ParseFiles("www/js/main.js"))
 
-// SendLine implements logsink.SendLine
-func (s *server) SendLine(ctx context.Context, in *pb.LineMessage) (*pb.LineResult, error) {
-	fmt.Println(in.Line)
-	return &pb.LineResult{Result: true}, nil
+func serveMainjs(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/js/main.js" {
+		http.Error(w, "Not found", 404)
+		return
+	}
+	if r.Method != "GET" {
+		http.Error(w, "Method not allowed", 405)
+		return
+	}
+	w.Header().Set("Content-Type", "text/javascripthtml; charset=utf-8")
+	jsTemplate := template.Must(template.ParseFiles("www/js/main.js"))
+	jsTemplate.Execute(w, r.Host)
 }
 
 // Start initializes the webserver and the server receving the lines
@@ -40,8 +47,17 @@ func Start() {
 	fmt.Printf("Binding definition provided: %s\n", viper.GetString("web.bind"))
 	fmt.Printf("Serving at: %s\n", viper.GetString("web.serve"))
 
+	srv := &server{}
+	go srv.run()
+
 	r := mux.NewRouter()
-	r.PathPrefix("/").Handler(handlers.LoggingHandler(os.Stdout, http.FileServer(http.Dir("./www"))))
+	r.HandleFunc("/js/main.js", serveMainjs) // js template
+	r.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		serveWs(srv.hub, w, r)
+	})
+	r.PathPrefix("/").Handler(handlers.CombinedLoggingHandler(os.Stdout, http.FileServer(http.Dir("./www")))) // static files
 	http.Handle("/", r)
-	http.ListenAndServe(viper.GetString("web.serve"), nil)
+	if err := http.ListenAndServe(viper.GetString("web.serve"), nil); err != nil {
+		log.Fatal("ListenAndServe: ", err)
+	}
 }
