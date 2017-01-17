@@ -4,7 +4,7 @@
 
 ## What is go-logsink
 
-go-logsink is a client and server application to aggregate multiple steams into one.
+go-logsink is a client and server application to aggregate multiple streams into one.
 
 It does so by sending all data piped into the client to the server.
 
