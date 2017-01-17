@@ -7,15 +7,22 @@ import (
 	"os"
 
 	pb "github.com/sascha-andres/go-logsink/logsink"
+	"github.com/spf13/viper"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
 
-// Connect is used to connect to a go-logsink server
-func Connect(address string) {
+var (
+	linePrefix string
+)
 
+// Connect is used to connect to a go-logsink server
+func Connect() {
+
+	fmt.Printf("Connecting to %s\n", viper.GetString("connect.address"))
+	linePrefix = viper.GetString("connect.prefix")
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	conn, err := grpc.Dial(viper.GetString("connect.address"), grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
@@ -24,8 +31,16 @@ func Connect(address string) {
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		res, err := c.SendLine(context.Background(), &pb.LineMessage{Line: scanner.Text()})
-		if !res.Result {
+		var (
+			res *pb.LineResult
+			err error
+		)
+		if "" == linePrefix {
+			res, err = c.SendLine(context.Background(), &pb.LineMessage{Line: scanner.Text()})
+		} else {
+			res, err = c.SendLine(context.Background(), &pb.LineMessage{Line: fmt.Sprintf("[%s] %s", linePrefix, scanner.Text())})
+		}
+		if !res.Result || nil != err {
 			log.Fatal(err)
 		}
 	}
