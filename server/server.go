@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	pb "github.com/sascha-andres/go-logsink/logsink"
+	"github.com/spf13/viper"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -22,8 +23,10 @@ func (s *server) SendLine(ctx context.Context, in *pb.LineMessage) (*pb.LineResu
 }
 
 // Listen starts the server
-func Listen(port string) {
-	lis, err := net.Listen("tcp", port)
+func Listen() {
+	fmt.Printf("Binding definition provided: %s\n", viper.GetString("listen.bind"))
+
+	lis, err := net.Listen("tcp", viper.GetString("listen.bind"))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
