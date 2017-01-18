@@ -20,13 +20,13 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/kardianos/osext"
 	"github.com/spf13/viper"
 )
-
-//var jsTemplate = template.Must(template.ParseFiles("www/js/main.js"))
 
 func serveMainjs(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/js/main.js" {
@@ -38,7 +38,13 @@ func serveMainjs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "text/javascripthtml; charset=utf-8")
-	jsTemplate := template.Must(template.ParseFiles("www/js/main.js"))
+	dir, err := osext.ExecutableFolder()
+	if err != nil {
+		http.Error(w, "Web data not found", 417)
+		return
+	}
+	log.Println(filepath.Join(dir, "www/js/main.js"))
+	jsTemplate := template.Must(template.ParseFiles(filepath.Join(dir, "www/js/main.js")))
 	jsTemplate.Execute(w, r.Host)
 }
 
@@ -52,10 +58,14 @@ func Start() {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/js/main.js", serveMainjs) // js template
-	r.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/api/go-logsink/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(srv.hub, w, r)
 	})
-	r.PathPrefix("/").Handler(handlers.CombinedLoggingHandler(os.Stdout, http.FileServer(http.Dir("./www")))) // static files
+	dir, err := osext.ExecutableFolder()
+	if err != nil {
+		log.Fatal("Could not locate directory")
+	}
+	r.PathPrefix("/").Handler(handlers.CombinedLoggingHandler(os.Stdout, http.FileServer(http.Dir(filepath.Join(dir, "www"))))) // static files
 	http.Handle("/", r)
 	if err := http.ListenAndServe(viper.GetString("web.serve"), nil); err != nil {
 		log.Fatal("ListenAndServe: ", err)
