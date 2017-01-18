@@ -6,11 +6,8 @@ window.onload = function () {
     function appendLog(line) {
         var item = document.createElement("div");
         item.innerText = line
-        var doScroll = log.scrollTop === log.scrollHeight - log.clientHeight;
-        log.insertBefore(item, log.firstChild);
-        if (doScroll) {
-            log.scrollTop = log.scrollHeight - log.clientHeight;
-        }
+        log.appendChild(item);
+        window.scrollTo(0,document.body.scrollHeight);
     }
     
     if (window["WebSocket"]) {
