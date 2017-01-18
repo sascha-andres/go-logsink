@@ -13,3 +13,8 @@ main {
     max-width: initial;
     width: 90%;
 }
+
+.fixed {
+  position: fixed;
+  right: 20;
+}
