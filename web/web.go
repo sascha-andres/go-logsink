@@ -43,7 +43,6 @@ func serveMainjs(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Web data not found", 417)
 		return
 	}
-	log.Println(filepath.Join(dir, "www/js/main.js"))
 	jsTemplate := template.Must(template.ParseFiles(filepath.Join(dir, "www/js/main.js")))
 	jsTemplate.Execute(w, r.Host)
 }
