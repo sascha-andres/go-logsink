@@ -28,6 +28,11 @@ import (
 	"github.com/spf13/viper"
 )
 
+type templateData struct {
+	Host  string
+	Limit int32
+}
+
 func serveMainjs(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/js/main.js" {
 		http.Error(w, "Not found", 404)
@@ -44,13 +49,14 @@ func serveMainjs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	jsTemplate := template.Must(template.ParseFiles(filepath.Join(dir, "www/js/main.js")))
-	jsTemplate.Execute(w, r.Host)
+	jsTemplate.Execute(w, templateData{Host: r.Host, Limit: int32(viper.GetInt("web.limit"))})
 }
 
 // Start initializes the webserver and the server receving the lines
 func Start() {
 	fmt.Printf("Binding definition provided: %s\n", viper.GetString("web.bind"))
 	fmt.Printf("Serving at: %s\n", viper.GetString("web.serve"))
+	fmt.Printf("Line limit: %d\n", viper.GetInt("web.limit"))
 
 	srv := &server{}
 	go srv.run()

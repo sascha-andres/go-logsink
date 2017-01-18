@@ -1,4 +1,6 @@
 var scrollingEnabled = true;
+var lineLimit = {{.Limit}};
+numberOfLines = 0;
 
 window.onload = function () {
     var conn;
@@ -12,10 +14,17 @@ window.onload = function () {
         if (scrollingEnabled) {
             window.scrollTo(0,document.body.scrollHeight);
         }
+        if (lineLimit > 0) {
+            numberOfLines++;
+            while (numberOfLines > lineLimit) {
+                log.removeChild(log.firstChild);
+                numberOfLines--;
+            }
+        }
     }
     
     if (window["WebSocket"]) {
-        conn = new WebSocket("ws://{{$}}/api/go-logsink/ws");
+        conn = new WebSocket("ws://{{.Host}}/api/go-logsink/ws");
         conn.onclose = function (evt) {
             log.innerHTML = "<b>Connection closed.</b>";
         }
