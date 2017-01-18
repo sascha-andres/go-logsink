@@ -7,4 +7,9 @@ body {
 main {
   flex: 1 0 auto;
 }
-    
+
+.container {
+    margin: 0 auto;
+    max-width: initial;
+    width: 90%;
+}
