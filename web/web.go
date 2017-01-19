@@ -72,7 +72,7 @@ func Start() {
 	}
 	r.PathPrefix("/").Handler(handlers.CombinedLoggingHandler(os.Stdout, http.FileServer(http.Dir(filepath.Join(dir, "www"))))) // static files
 	http.Handle("/", r)
-	if err := http.ListenAndServe(viper.GetString("web.serve"), nil); err != nil {
+	if err := http.ListenAndServe(viper.GetString("web.serve"), handlers.CORS()(handlers.ProxyHeaders(r))); err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
 }
