@@ -52,13 +52,17 @@ func serveMainjs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	jsTemplate := template.Must(template.ParseFiles(filepath.Join(dir, "www/js/main.js")))
+	jsTemplate.Execute(w, templateData{Host: r.Host, Limit: int32(viper.GetInt("web.limit")), Scheme: getScheme(r)})
+}
+
+func getScheme(r *http.Request) string {
 	var scheme string
 	if strings.HasPrefix(r.Header["Referer"][0], "https") {
 		scheme = "wss"
 	} else {
 		scheme = "ws"
 	}
-	jsTemplate.Execute(w, templateData{Host: r.Host, Limit: int32(viper.GetInt("web.limit")), Scheme: scheme})
+	return scheme
 }
 
 // Start initializes the webserver and the server receving the lines
