@@ -57,10 +57,16 @@ func serveMainjs(w http.ResponseWriter, r *http.Request) {
 
 func getScheme(r *http.Request) string {
 	var scheme string
-	if strings.HasPrefix(r.Header["Referer"][0], "https") {
-		scheme = "wss"
-	} else {
+	if len(r.Header["Referer"]) == 0 {
+		fmt.Println(r.Host)
+		fmt.Println(r.URL.Scheme)
 		scheme = "ws"
+	} else {
+		if strings.HasPrefix(r.Header["Referer"][0], "https") {
+			scheme = "wss"
+		} else {
+			scheme = "ws"
+		}
 	}
 	return scheme
 }

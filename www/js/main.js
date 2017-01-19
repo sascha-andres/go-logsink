@@ -2,6 +2,10 @@ var scrollingEnabled = true;
 var lineLimit = {{.Limit}};
 numberOfLines = 0;
 
+function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
 window.onload = function () {
     var conn;
     
@@ -35,13 +39,20 @@ window.onload = function () {
     } else {
         log.innerHTML = "<b>Your browser does not support WebSockets.</b>";
     }
+
+    document.getElementById("limit").value = lineLimit;
+    document.getElementById("limit").onblur = function (evt) {
+        if (isNumber(document.getElementById("limit").value)) {
+            lineLimit = document.getElementById("limit").value;
+        }
+    };
 };
 
 togglScrolling = function () {
     scrollingEnabled=!scrollingEnabled;
     if (scrollingEnabled) {
-        document.getElementById("scrollToggler").innerText = "scrolling"
+        document.getElementById("scrollToggler").innerText = "scrolling";
     } else {
-        document.getElementById("scrollToggler").innerText = "paused"
+        document.getElementById("scrollToggler").innerText = "paused";
     }
 }
