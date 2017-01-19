@@ -24,7 +24,7 @@ window.onload = function () {
     }
     
     if (window["WebSocket"]) {
-        conn = new WebSocket("ws://{{.Host}}/api/go-logsink/ws");
+        conn = new WebSocket("{{.Scheme}}://{{.Host}}/api/go-logsink/ws");
         conn.onclose = function (evt) {
             log.innerHTML = "<b>Connection closed.</b>";
         }

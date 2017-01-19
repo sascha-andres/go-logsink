@@ -22,6 +22,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"strings"
+
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/kardianos/osext"
@@ -29,8 +31,9 @@ import (
 )
 
 type templateData struct {
-	Host  string
-	Limit int32
+	Host   string
+	Limit  int32
+	Scheme string
 }
 
 func serveMainjs(w http.ResponseWriter, r *http.Request) {
@@ -49,7 +52,13 @@ func serveMainjs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	jsTemplate := template.Must(template.ParseFiles(filepath.Join(dir, "www/js/main.js")))
-	jsTemplate.Execute(w, templateData{Host: r.Host, Limit: int32(viper.GetInt("web.limit"))})
+	var scheme string
+	if strings.HasPrefix(r.Header["Referer"][0], "https") {
+		scheme = "wss"
+	} else {
+		scheme = "ws"
+	}
+	jsTemplate.Execute(w, templateData{Host: r.Host, Limit: int32(viper.GetInt("web.limit")), Scheme: scheme})
 }
 
 // Start initializes the webserver and the server receving the lines
