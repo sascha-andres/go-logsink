@@ -30,11 +30,16 @@ var (
 	linePrefix string
 )
 
+func setup() string {
+	if !viper.GetBool("connect.pass-through") {
+		fmt.Printf("Connecting to %s\n", viper.GetString("connect.address"))
+	}
+	return viper.GetString("connect.prefix")
+}
+
 // Connect is used to connect to a go-logsink server
 func Connect() {
-
-	fmt.Printf("Connecting to %s\n", viper.GetString("connect.address"))
-	linePrefix = viper.GetString("connect.prefix")
+	linePrefix = setup()
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(viper.GetString("connect.address"), grpc.WithInsecure())
 	if err != nil {
@@ -49,10 +54,14 @@ func Connect() {
 			res *pb.LineResult
 			err error
 		)
+		content := scanner.Text()
+		if viper.GetBool("connect.pass-through") {
+			fmt.Println(content)
+		}
 		if "" == linePrefix {
-			res, err = c.SendLine(context.Background(), &pb.LineMessage{Line: scanner.Text()})
+			res, err = c.SendLine(context.Background(), &pb.LineMessage{Line: content})
 		} else {
-			res, err = c.SendLine(context.Background(), &pb.LineMessage{Line: fmt.Sprintf("[%s] %s", linePrefix, scanner.Text())})
+			res, err = c.SendLine(context.Background(), &pb.LineMessage{Line: fmt.Sprintf("[%s] %s", linePrefix, content)})
 		}
 		if !res.Result || nil != err {
 			log.Fatal(err)
