@@ -13,7 +13,11 @@ window.onload = function () {
     
     function appendLog(line) {
         var item = document.createElement("div");
-        item.innerText = line
+        if (line === "") {
+            item.innerText = " ";
+        } else {
+            item.innerText = line;
+        }
         log.appendChild(item);
         if (scrollingEnabled) {
             window.scrollTo(0,document.body.scrollHeight);
