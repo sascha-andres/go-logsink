@@ -1,21 +1,17 @@
-## go-logsink listen
+## go-logsink version
 
-Start a server instance of go-logsink
+Print out the currect version
 
 ### Synopsis
 
 
-This command is used to create a go-logsink server.
-Call it to have clients forward log messages here.
+Print out the version.
+
+Version tag has format YYYYMMDD, where YYYY is the year, MM the month and DD the 
+day of the release.
 
 ```
-go-logsink listen
-```
-
-### Options
-
-```
-  -b, --bind string   Provide bind definition (default ":50051")
+go-logsink version
 ```
 
 ### Options inherited from parent commands
