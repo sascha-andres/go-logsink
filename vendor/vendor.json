@@ -111,6 +111,12 @@
 			"revisionTime": "2014-10-17T20:07:13Z"
 		},
 		{
+			"checksumSHA1": "g+afVQQVopBLiLB5pFZp/8s6aBs=",
+			"path": "github.com/kardianos/osext",
+			"revision": "c2c54e542fb797ad986b31721e1baedf214ca413",
+			"revisionTime": "2016-08-11T00:15:26Z"
+		},
+		{
 			"checksumSHA1": "506eXGmFfB7mgzbMcsdT/UAXJgI=",
 			"path": "github.com/magiconair/properties",
 			"revision": "9c47895dc1ce54302908ab8a43385d1f5df2c11c",

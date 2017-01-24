@@ -82,6 +82,15 @@ Rudimentary tests were done, no in depth testing, though
 
 |Version|Description|
 |---|---|
+|20170124|Forcing display space usage|
+||Allow toggling of scroll|
+||Add a `--break` switch to connect|
+||Enabling CORS|
+||Supporting SSL behind a proxy|
+||Added `--pass-through` switch on connect to pass text to stdout|
+||Allow changing the line limit in web|
+||Breaking on web for pre element|
+||Filtering in web|
 |20170117|Web endpoint|
 ||doc command|
 ||version command|

@@ -7,4 +7,21 @@ body {
 main {
   flex: 1 0 auto;
 }
-    
+
+.container {
+    margin: 0 auto;
+    max-width: initial;
+    width: 90%;
+}
+
+.fixed {
+  position: fixed;
+  right: 20;
+}
+
+pre {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}

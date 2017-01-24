@@ -28,11 +28,26 @@
     <main>
       <div class="container">
         <div class="section">
-
           <!--   Icon Section   -->
           <div class="row">
-            <div class="col s10 offset-s1">
+            <div class="col s11">
               <pre id="log"></pre>
+            </div>
+            <!-- Table of Contents -->
+            <div class="col s1">
+              <div class="fixed">
+                <a class="btn waves-effect waves-red" id="scrollToggler" href="javascript:togglScrolling();">Scrolling</a>
+                <br />
+                <br />
+                <input id="limit" value="0" type="text" class="validate" style="width: 50px;" />
+                <label for="limit" >Limit</label>
+                <br />
+                <br />
+                <input id="expr" value="" type="text" class="validate" style="width: 50px;" />
+                <label for="expr" >Filter</label>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </main>
@@ -44,6 +59,7 @@
           <div class="col l3 s12">
             <h5 class="white-text">Links</h5>
             <ul>
+              <li><a class="white-text" href="http://go-logsink.livingit.de/">Homepage</a></li>
               <li><a class="white-text" href="https://sascha-andres.github.io/go-logsink/">github.com</a></li>
             </ul>
           </div>
@@ -51,8 +67,6 @@
             <h5 class="white-text">Connect</h5>
             <ul>
               <li><a class="white-text" href="https://livingit.de/">Sascha Andres</a></li>
-              <li><a class="white-text" href="http://stackoverflow.com/users/66907/sascha">stackoverflow</a></li>
-              <li><a class="white-text" href="https://www.xing.com/profile/Sascha_Andres">XING</a></li>
             </ul>
           </div>
         </div>
