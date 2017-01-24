@@ -1,6 +1,7 @@
 var scrollingEnabled = true;
 var lineLimit = {{.Limit}};
-numberOfLines = 0;
+var numberOfLines = 0;
+var expr = "";
 
 function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -12,6 +13,9 @@ window.onload = function () {
     var log = document.getElementById("log");
     
     function appendLog(line) {
+        if (!line.match(expr)) {
+            return;
+        }
         var item = document.createElement("div");
         if (line === "") {
             item.innerText = " ";
@@ -49,6 +53,9 @@ window.onload = function () {
         if (isNumber(document.getElementById("limit").value)) {
             lineLimit = document.getElementById("limit").value;
         }
+    };
+    document.getElementById("expr").onblur = function (evt) {
+        expr = document.getElementById("expr").value;
     };
 };
 

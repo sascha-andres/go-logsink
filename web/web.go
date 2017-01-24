@@ -45,7 +45,7 @@ func serveMainjs(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", 405)
 		return
 	}
-	w.Header().Set("Content-Type", "text/javascripthtml; charset=utf-8")
+	w.Header().Set("Content-Type", "text/javascript; charset=utf-8")
 	dir, err := osext.ExecutableFolder()
 	if err != nil {
 		http.Error(w, "Web data not found", 417)
