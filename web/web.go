@@ -16,11 +16,11 @@ package web
 
 import (
 	"fmt"
-	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
+	"text/template"
 
 	"strings"
 
