@@ -15,6 +15,10 @@
 package cmd
 
 import (
+	"fmt"
+	"log"
+
+	"github.com/nightlyone/lockfile"
 	"github.com/sascha-andres/go-logsink/client"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -27,6 +31,20 @@ var connectCmd = &cobra.Command{
 	Long: `This command is used to connect to a go-logsink server.
 Call it to forward data piped ito this application to the server.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if "" != viper.GetString("lockfile") {
+			lock, err := lockfile.New(viper.GetString("lockfile"))
+			if err != nil {
+				log.Fatal(err) // handle properly please!
+			}
+			err = lock.TryLock()
+
+			// Error handling is essential, as we only try to get the lock.
+			if err != nil {
+				log.Fatal(fmt.Errorf("Cannot lock %q, reason: %v", lock, err))
+			}
+
+			defer lock.Unlock()
+		}
 		client.Connect()
 	},
 }
