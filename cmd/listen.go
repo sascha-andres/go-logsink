@@ -30,8 +30,8 @@ var listenCmd = &cobra.Command{
 	Long: `This command is used to create a go-logsink server.
 Call it to have clients forward log messages here.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if "" != viper.GetString("listen.lockfile") {
-			lock, err := lockfile.New(viper.GetString("listen.lockfile"))
+		if "" != viper.GetString("lockfile") {
+			lock, err := lockfile.New(viper.GetString("lockfile"))
 			if err != nil {
 				log.Fatal(err) // handle properly please!
 			}
@@ -51,7 +51,5 @@ Call it to have clients forward log messages here.`,
 func init() {
 	RootCmd.AddCommand(listenCmd)
 	listenCmd.Flags().StringP("bind", "b", ":50051", "Provide bind definition")
-	listenCmd.Flags().StringP("lockfile", "l", "", "Adhere to lockfile")
 	viper.BindPFlag("listen.bind", listenCmd.Flags().Lookup("bind"))
-	viper.BindPFlag("listen.lockfile", listenCmd.Flags().Lookup("lockfile"))
 }
