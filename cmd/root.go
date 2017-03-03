@@ -52,6 +52,9 @@ func init() {
 	// will be global for your application.
 
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.go-logsink.yaml)")
+	RootCmd.PersistentFlags().StringP("lockfile", "", "", "Specify a lockfile")
+	viper.BindPFlag("lockfile", RootCmd.PersistentFlags().Lookup("lockfile"))
+
 }
 
 // initConfig reads in config file and ENV variables if set.
