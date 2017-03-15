@@ -82,6 +82,11 @@ Rudimentary tests were done, no in depth testing, though
 
 |Version|Description|
 |---|---|
+|v1.0.1|go-ps|
+|v1.0.0|New versioning scheme|
+||Lockfile support|
+||go-releaser|
+||Added .editorconfig|
 |20170124|Forcing display space usage|
 ||Allow toggling of scroll|
 ||Add a `--break` switch to connect|

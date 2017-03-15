@@ -45,4 +45,4 @@ jsconfig.json
 
 *.pb.go
 go-logsink
-build/
+dist/
