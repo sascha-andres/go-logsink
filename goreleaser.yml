@@ -9,5 +9,10 @@ build:
 
 archive:
  files:
-    - www/*/*
+    - www/index.html
+    - www/css/main.css
+    - www/js/main.js
     - README.md
+
+release:
+  draft: true
