@@ -6,3 +6,8 @@ build:
     - linux
   goarch:
     - amd64
+
+archive:
+ files:
+    - www/*/*
+    - README.md
