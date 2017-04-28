@@ -1,8 +1,13 @@
 build:
-  binary_name: go-logsink
+  binary: go-logsink
   goos:
     - windows
     - darwin
     - linux
   goarch:
     - amd64
+
+archive:
+ files:
+    - www/*/*
+    - README.md

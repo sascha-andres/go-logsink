@@ -82,6 +82,7 @@ Rudimentary tests were done, no in depth testing, though
 
 |Version|Description|
 |---|---|
+v1.0.2|Graceful shutdown|
 |v1.0.1|go-ps|
 |v1.0.0|New versioning scheme|
 ||Lockfile support|

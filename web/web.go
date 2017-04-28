@@ -15,12 +15,15 @@
 package web
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"text/template"
+	"time"
 
 	"strings"
 
@@ -91,7 +94,19 @@ func Start() {
 	}
 	r.PathPrefix("/").Handler(handlers.CombinedLoggingHandler(os.Stdout, http.FileServer(http.Dir(filepath.Join(dir, "www"))))) // static files
 	http.Handle("/", r)
-	if err := http.ListenAndServe(viper.GetString("web.serve"), handlers.CORS()(handlers.ProxyHeaders(r))); err != nil {
-		log.Fatal("ListenAndServe: ", err)
-	}
+	stop := make(chan os.Signal)
+	signal.Notify(stop, os.Interrupt)
+	h := &http.Server{Addr: viper.GetString("web.serve"), Handler: handlers.CORS()(handlers.ProxyHeaders(r))}
+	go func() {
+		if err := h.ListenAndServe(); err != nil {
+			log.Fatal("ListenAndServe: ", err)
+		}
+	}()
+	<-stop
+
+	log.Println("Shutting down the server...")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	h.Shutdown(ctx)
+	log.Println("Server gracefully stopped")
 }
