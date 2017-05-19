@@ -27,6 +27,24 @@
 			"revisionTime": "2016-11-17T03:31:26Z"
 		},
 		{
+			"checksumSHA1": "GEOcEfTErKBV6xEvZGjYy2LV0PI=",
+			"path": "github.com/google/gops/agent",
+			"revision": "62f833fc9f6c4d3223bdb37bd0c2f8951bed8596",
+			"revisionTime": "2017-03-19T00:29:31Z"
+		},
+		{
+			"checksumSHA1": "JReTqQzncYSyvJbrmfBWZHMZfQU=",
+			"path": "github.com/google/gops/internal",
+			"revision": "62f833fc9f6c4d3223bdb37bd0c2f8951bed8596",
+			"revisionTime": "2017-03-19T00:29:31Z"
+		},
+		{
+			"checksumSHA1": "OPlS4cJsOSpZ/FrUOJtfJXikjII=",
+			"path": "github.com/google/gops/signal",
+			"revision": "62f833fc9f6c4d3223bdb37bd0c2f8951bed8596",
+			"revisionTime": "2017-03-19T00:29:31Z"
+		},
+		{
 			"checksumSHA1": "g/V4qrXjUGG9B+e3hB+4NAYJ5Gs=",
 			"path": "github.com/gorilla/context",
 			"revision": "08b5f424b9271eedf6f9f0ce86cb9396ed337a42",
@@ -129,6 +147,12 @@
 			"revisionTime": "2016-12-11T22:23:15Z"
 		},
 		{
+			"checksumSHA1": "aCtmlyAgau9n0UHs8Pk+3xfIaVk=",
+			"path": "github.com/nightlyone/lockfile",
+			"revision": "1d49c987357a327b5b03aa84cbddd582c328615d",
+			"revisionTime": "2016-09-28T00:14:32Z"
+		},
+		{
 			"checksumSHA1": "8Y05Pz7onrQPcVWW6JStSsYRh6E=",
 			"path": "github.com/pelletier/go-buffruneio",
 			"revision": "df1e16fde7fc330a0ca68167c23bf7ed6ac31d6d",
@@ -139,6 +163,12 @@
 			"path": "github.com/pelletier/go-toml",
 			"revision": "439fbba1f887c286024370cb4f281ba815c4c7d7",
 			"revisionTime": "2016-12-29T18:51:04Z"
+		},
+		{
+			"checksumSHA1": "++Uxr4F++QrnFEbBlQsJ3VuQoNM=",
+			"path": "github.com/rakyll/statik/fs",
+			"revision": "89fe3459b5c829c32e89bdff9c43f18aad728f2f",
+			"revisionTime": "2017-04-10T19:29:44Z"
 		},
 		{
 			"checksumSHA1": "JdYdBoNxMR+CDqTfs78cQmY8JtI=",
