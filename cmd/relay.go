@@ -30,6 +30,7 @@ var relayCmd = &cobra.Command{
 	Long: `Instead of dumping incoming messages a relay forwards
 the messages to another go-logsink instance`,
 	Run: func(cmd *cobra.Command, args []string) {
+		log.Println("!! Relaying is deprecated")
 		if "" != viper.GetString("lockfile") {
 			lock, err := lockfile.New(viper.GetString("lockfile"))
 			if err != nil {
