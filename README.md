@@ -38,6 +38,8 @@ More usage: See [go-logsink documentation](docs/go-logsink.md)
 
 ## Relay
 
+_DEPRECATED_ Recommended solution is to use `go-logsing listen ... | go-logsing connect ...`
+
 If you want to forward data from one network to another you can do this using the relay method.
 
     |--------|      |-------|      |--------|
@@ -82,7 +84,10 @@ Rudimentary tests were done, no in depth testing, though
 
 |Version|Description|
 |---|---|
-v1.0.2|Graceful shutdown|
+|v1.1.0|Web included in binary|
+||Deprecated relaying|
+||Added prometheus metrics|
+|v1.0.2|Graceful shutdown|
 |v1.0.1|go-ps|
 |v1.0.0|New versioning scheme|
 ||Lockfile support|

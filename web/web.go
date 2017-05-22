@@ -15,13 +15,13 @@
 package web
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
-	"path/filepath"
 	"text/template"
 	"time"
 
@@ -29,8 +29,22 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"github.com/kardianos/osext"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/viper"
+
+	"github.com/rakyll/statik/fs"
+
+	_ "github.com/sascha-andres/go-logsink/web/statik" // get access to data
+)
+
+var (
+	statikFS      http.FileSystem
+	jsTemplate    *template.Template
+	numberOfLines = prometheus.NewCounter(prometheus.CounterOpts{
+		Name: "log_lines",
+		Help: "Number of lines received",
+	})
 )
 
 type templateData struct {
@@ -49,12 +63,6 @@ func serveMainjs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "text/javascript; charset=utf-8")
-	dir, err := osext.ExecutableFolder()
-	if err != nil {
-		http.Error(w, "Web data not found", 417)
-		return
-	}
-	jsTemplate := template.Must(template.ParseFiles(filepath.Join(dir, "www/js/main.js")))
 	jsTemplate.Execute(w, templateData{Host: r.Host, Limit: int32(viper.GetInt("web.limit")), Scheme: getScheme(r)})
 }
 
@@ -83,16 +91,15 @@ func Start() {
 	srv := &server{}
 	go srv.run()
 
+	prometheus.MustRegister(numberOfLines)
+
 	r := mux.NewRouter()
 	r.HandleFunc("/js/main.js", serveMainjs) // js template
 	r.HandleFunc("/api/go-logsink/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(srv.hub, w, r)
 	})
-	dir, err := osext.ExecutableFolder()
-	if err != nil {
-		log.Fatal("Could not locate directory")
-	}
-	r.PathPrefix("/").Handler(handlers.CombinedLoggingHandler(os.Stdout, http.FileServer(http.Dir(filepath.Join(dir, "www"))))) // static files
+	r.Handle("/metrics", promhttp.Handler())
+	r.PathPrefix("/").Handler(handlers.CombinedLoggingHandler(os.Stdout, http.FileServer(statikFS))) // static files
 	http.Handle("/", r)
 	stop := make(chan os.Signal)
 	signal.Notify(stop, os.Interrupt)
@@ -109,4 +116,23 @@ func Start() {
 	defer cancel()
 	h.Shutdown(ctx)
 	log.Println("Server gracefully stopped")
+}
+
+func init() {
+	files, err := fs.New()
+	if err != nil {
+		log.Fatal("Error initializing filesystem: ", err)
+	}
+	statikFS = files
+	file, err := statikFS.Open("/js/main.js")
+	if err != nil {
+		log.Fatal("Error reading js template: ", err)
+	}
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(file)
+	tmpl, err := template.New("jsTemplate").Parse(buf.String())
+	if err != nil {
+		log.Fatal("Error parsing template: ", err)
+	}
+	jsTemplate = tmpl
 }
