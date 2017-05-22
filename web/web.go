@@ -29,6 +29,8 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/viper"
 
 	"github.com/rakyll/statik/fs"
@@ -37,8 +39,12 @@ import (
 )
 
 var (
-	statikFS   http.FileSystem
-	jsTemplate *template.Template
+	statikFS      http.FileSystem
+	jsTemplate    *template.Template
+	numberOfLines = prometheus.NewCounter(prometheus.CounterOpts{
+		Name: "log_lines",
+		Help: "Number of lines received",
+	})
 )
 
 type templateData struct {
@@ -85,11 +91,14 @@ func Start() {
 	srv := &server{}
 	go srv.run()
 
+	prometheus.MustRegister(numberOfLines)
+
 	r := mux.NewRouter()
 	r.HandleFunc("/js/main.js", serveMainjs) // js template
 	r.HandleFunc("/api/go-logsink/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(srv.hub, w, r)
 	})
+	r.Handle("/metrics", promhttp.Handler())
 	r.PathPrefix("/").Handler(handlers.CombinedLoggingHandler(os.Stdout, http.FileServer(statikFS))) // static files
 	http.Handle("/", r)
 	stop := make(chan os.Signal)

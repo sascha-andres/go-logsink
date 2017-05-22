@@ -21,6 +21,7 @@ type server struct {
 
 // SendLine implements logsink.SendLine
 func (s *server) SendLine(ctx context.Context, in *pb.LineMessage) (*pb.LineResult, error) {
+	numberOfLines.Inc()
 	breakAt := viper.GetInt("web.break")
 	if breakAt == 0 {
 		s.hub.broadcast <- []byte(in.Line)
