@@ -84,8 +84,9 @@ Rudimentary tests were done, no in depth testing, though
 
 |Version|Description|
 |---|---|
-|TBD|Web included in binary|
+|v1.1.0|Web included in binary|
 ||Deprecated relaying|
+||Added prometheus metrics|
 |v1.0.2|Graceful shutdown|
 |v1.0.1|go-ps|
 |v1.0.0|New versioning scheme|
