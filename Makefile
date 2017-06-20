@@ -8,5 +8,6 @@ protobuf:
 	./check_protobuf.sh
 	protoc -I logsink/ logsink/logsink.proto --go_out=plugins=grpc:logsink
 statik:
-	cd web && statik -src=../web
+	-rm web/statik/statik.go
+	cd web && statik -src=../www
 all: linux osx windows
