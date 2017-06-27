@@ -20,14 +20,6 @@ Please note: I have taken the CONTRIBUTING.md from [Atom](https://github.com/ato
 
 [Styleguides](#styleguides)
   * [Git Commit Messages](#git-commit-messages)
-  * [JavaScript Styleguide](#javascript-styleguide)
-  * [CoffeeScript Styleguide](#coffeescript-styleguide)
-  * [Specs Styleguide](#specs-styleguide)
-  * [Documentation Styleguide](#documentation-styleguide)
-
-[Additional Notes](#additional-notes)
-  * [Issue and Pull Request Labels](#issue-and-pull-request-labels)
-
 ## Code of Conduct
 
 This project and everyone participating in it is governed by the [go-logsink Code of Conduct](code_of_conduct.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [sascha.andres@outlook.com](sascha.andres@outlook.com).
