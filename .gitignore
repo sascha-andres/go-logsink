@@ -48,3 +48,4 @@ go-logsink
 go-logsink.osx
 go-logsink.exe
 dist/
+.idea/
