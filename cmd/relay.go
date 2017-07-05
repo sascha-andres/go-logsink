@@ -18,7 +18,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/nightlyone/lockfile"
 	"github.com/sascha-andres/go-logsink/relay"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -31,18 +30,8 @@ var relayCmd = &cobra.Command{
 the messages to another go-logsink instance`,
 	Run: func(cmd *cobra.Command, args []string) {
 		log.Println("!! Relaying is deprecated")
-		if "" != viper.GetString("lockfile") {
-			lock, err := lockfile.New(viper.GetString("lockfile"))
-			if err != nil {
-				log.Fatal(err) // handle properly please!
-			}
-			err = lock.TryLock()
-
-			// Error handling is essential, as we only try to get the lock.
-			if err != nil {
-				log.Fatal(fmt.Errorf("Cannot lock %q, reason: %v", lock, err))
-			}
-
+		lock := lock()
+		if nil != lock {
 			defer lock.Unlock()
 		}
 
