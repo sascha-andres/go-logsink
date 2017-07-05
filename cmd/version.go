@@ -30,11 +30,10 @@ var versionCmd = &cobra.Command{
 	Short: "Print out the currect version",
 	Long: `Print out the version.
 
-Version tag has format YYYYMMDD, where YYYY is the year, MM the month and DD the 
+Version tag has format YYYYMMDD, where YYYY is the year, MM the month and DD the
 day of the release.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Printf("go-loginsk version %s\n", version)
+		fmt.Printf("go-logsink version %s\n", version)
 	},
 }
 
