@@ -32,7 +32,7 @@ _testmain.go
 
 # External packages folder
 vendor/
-
+!vendor/vendor.json
 
 ### Code ###
 # Visual Studio Code - https://code.visualstudio.com/
