@@ -33,7 +33,7 @@ var (
 
 func setup() string {
 	if !viper.GetBool("connect.pass-through") {
-		fmt.Printf("Connecting to %s\n", viper.GetString("connect.address"))
+		log.Printf("Connecting to %s\n", viper.GetString("connect.address"))
 	}
 	return viper.GetString("connect.prefix")
 }
@@ -69,6 +69,6 @@ func Connect() {
 		}
 	}
 	if err := scanner.Err(); err != nil {
-		fmt.Fprintln(os.Stderr, "reading standard input:", err)
+		log.Warnf("reading standard input:", err)
 	}
 }
