@@ -21,7 +21,10 @@ import (
 	"github.com/sascha-andres/go-logsink/cmd"
 )
 
+var version string = "develop"
+
 func main() {
+	log.Printf("go-logsink version %s", version)
 	if err := agent.Listen(nil); err != nil {
 		log.Fatal(err)
 	}

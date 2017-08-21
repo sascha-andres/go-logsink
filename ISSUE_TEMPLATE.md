@@ -27,7 +27,7 @@ Have you read Atom's Code of Conduct? By filing an Issue, you are expected to co
 
 ### Versions
 
-You can get this information from copy and pasting the output of `go-logsink --version` from the command line. Also, please include the OS and what version of the OS you're running.
+You can get this information by starting `go-logsink`. Also, please include the OS and what version of the OS you're running.
 
 ### Additional Information
 
