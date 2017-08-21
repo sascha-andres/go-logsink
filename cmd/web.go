@@ -30,11 +30,7 @@ to see the logs in your browser.
 
   go-logsink web --serve ":80" --bind ":50051"`,
 	Run: func(cmd *cobra.Command, args []string) {
-		lock := lock()
-		if nil != lock {
-			defer lock.Unlock()
-		}
-		web.Start()
+		handleLock(web.Start)
 	},
 }
 

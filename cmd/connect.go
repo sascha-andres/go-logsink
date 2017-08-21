@@ -27,11 +27,7 @@ var connectCmd = &cobra.Command{
 	Long: `This command is used to connect to a go-logsink server.
 Call it to forward data piped ito this application to the server.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		lock := lock()
-		if nil != lock {
-			defer lock.Unlock()
-		}
-		client.Connect()
+		handleLock(client.Connect)
 	},
 }
 
