@@ -17,13 +17,13 @@ package web
 import (
 	"bytes"
 	"context"
-	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"text/template"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"strings"
 
@@ -69,8 +69,6 @@ func serveMainjs(w http.ResponseWriter, r *http.Request) {
 func getScheme(r *http.Request) string {
 	var scheme string
 	if len(r.Header["Referer"]) == 0 {
-		fmt.Println(r.Host)
-		fmt.Println(r.URL.Scheme)
 		scheme = "ws"
 	} else {
 		if strings.HasPrefix(r.Header["Referer"][0], "https") {
@@ -84,9 +82,9 @@ func getScheme(r *http.Request) string {
 
 // Start initializes the webserver and the server receving the lines
 func Start() {
-	fmt.Printf("Binding definition provided: %s\n", viper.GetString("web.bind"))
-	fmt.Printf("Serving at: %s\n", viper.GetString("web.serve"))
-	fmt.Printf("Line limit: %d\n", viper.GetInt("web.limit"))
+	log.Printf("Binding definition provided: %s", viper.GetString("web.bind"))
+	log.Printf("Serving at: %s", viper.GetString("web.serve"))
+	log.Printf("Line limit: %d", viper.GetInt("web.limit"))
 
 	srv := &server{}
 	go srv.run()

@@ -7,11 +7,6 @@ build:
   goarch:
     - amd64
 
-archive:
- files:
-    - www/index.html
-    - www/css/main.css
-    - www/js/main.js
     - README.md
 
 release:

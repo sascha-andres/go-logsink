@@ -2,9 +2,10 @@ package web
 
 import (
 	"fmt"
-	"log"
 	"math"
 	"net"
+
+	log "github.com/sirupsen/logrus"
 
 	"golang.org/x/net/context"
 

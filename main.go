@@ -15,7 +15,7 @@
 package main
 
 import (
-	"log"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/google/gops/agent"
 	"github.com/sascha-andres/go-logsink/cmd"
