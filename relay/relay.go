@@ -15,8 +15,9 @@
 package relay
 
 import (
-	"log"
 	"net"
+
+	log "github.com/sirupsen/logrus"
 
 	pb "github.com/sascha-andres/go-logsink/logsink"
 	"github.com/spf13/viper"

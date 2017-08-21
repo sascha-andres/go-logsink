@@ -18,12 +18,13 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"text/template"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"strings"
 

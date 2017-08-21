@@ -15,8 +15,9 @@
 package server
 
 import (
-	"log"
 	"net"
+
+	log "github.com/sirupsen/logrus"
 
 	"fmt"
 
