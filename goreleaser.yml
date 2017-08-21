@@ -17,12 +17,12 @@ archive:
 release:
   draft: true
 
-fpm:
-  vendor: Sascha Andres
-  homepage: https://github.com/go-task/task
-  maintainer: Sascha Andres <sascha.andres@outlook.com>
-  description: Log aggregation
-  license: Apache 2.0
-  formats:
-    - deb
-    - rpm
+#fpm:
+#  vendor: Sascha Andres
+#  homepage: https://github.com/go-task/task
+#  maintainer: Sascha Andres <sascha.andres@outlook.com>
+#  description: Log aggregation
+#  license: Apache 2.0
+#  formats:
+#    - deb
+#    - rpm
