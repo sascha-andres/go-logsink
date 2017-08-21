@@ -1,5 +1,4 @@
 // Copyright © 2017 Sascha Andres <sascha.andres@outlook.com>
-//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -16,28 +15,26 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 
-	"github.com/spf13/cobra"
+	"github.com/nightlyone/lockfile"
+	"github.com/spf13/viper"
 )
 
-const (
-	version = "20170124"
-)
+func handleLock(method func()) {
+	if "" != viper.GetString("lockfile") {
+		lock, err := lockfile.New(viper.GetString("lockfile"))
+		if err != nil {
+			log.Fatal(err) // handle properly please!
+		}
+		err = lock.TryLock()
 
-// versionCmd represents the version command
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Print out the currect version",
-	Long: `Print out the version.
+		// Error handling is essential, as we only try to get the lock.
+		if err != nil {
+			log.Fatal(fmt.Errorf("Cannot lock %q, reason: %v", lock, err))
+		}
 
-Version tag has format YYYYMMDD, where YYYY is the year, MM the month and DD the 
-day of the release.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Printf("go-loginsk version %s\n", version)
-	},
-}
-
-func init() {
-	RootCmd.AddCommand(versionCmd)
+		defer lock.Unlock()
+	}
+	method()
 }

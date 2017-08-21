@@ -59,9 +59,9 @@ func Connect() {
 			fmt.Println(content)
 		}
 		if "" == linePrefix {
-			res, err = c.SendLine(context.Background(), &pb.LineMessage{Line: content})
+			res, err = c.SendLine(context.Background(), &pb.LineMessage{Line: content, Priority: int32(viper.GetInt("connect.priority"))})
 		} else {
-			res, err = c.SendLine(context.Background(), &pb.LineMessage{Line: fmt.Sprintf("[%s] %s", linePrefix, content)})
+			res, err = c.SendLine(context.Background(), &pb.LineMessage{Line: fmt.Sprintf("[%s] %s", linePrefix, content), Priority: int32(viper.GetInt("connect.priority"))})
 		}
 		if !res.Result || nil != err {
 			log.Fatal(err)

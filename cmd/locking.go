@@ -12,21 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package cmd
 
 import (
+	"fmt"
 	"log"
 
-	"github.com/google/gops/agent"
-	"github.com/sascha-andres/go-logsink/cmd"
+	"github.com/nightlyone/lockfile"
+	"github.com/spf13/viper"
 )
 
-var version string = "develop"
+func lock() *lockfile.Lockfile {
+	if "" != viper.GetString("lockfile") {
+		lock, err := lockfile.New(viper.GetString("lockfile"))
+		if err != nil {
+			log.Fatal(err) // handle properly please!
+		}
+		err = lock.TryLock()
 
-func main() {
-	log.Printf("go-logsink version %s", version)
-	if err := agent.Listen(nil); err != nil {
-		log.Fatal(err)
+		// Error handling is essential, as we only try to get the lock.
+		if err != nil {
+			log.Fatal(fmt.Errorf("Cannot lock %q, reason: %v", lock, err))
+		}
+
+		return &lock
 	}
-	cmd.Execute()
+	return nil
 }

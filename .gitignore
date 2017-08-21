@@ -32,7 +32,7 @@ _testmain.go
 
 # External packages folder
 vendor/
-
+!vendor/vendor.json
 
 ### Code ###
 # Visual Studio Code - https://code.visualstudio.com/
@@ -48,3 +48,4 @@ go-logsink
 go-logsink.osx
 go-logsink.exe
 dist/
+.idea/
