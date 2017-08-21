@@ -25,3 +25,28 @@ pre {
   white-space: -o-pre-wrap;
   word-wrap: break-word;
 }
+
+.normal {
+	background-color: white;
+	color: black;
+}
+
+.raised {
+	background-color: #FFFE7A;
+	color: black;
+}
+
+.medium {
+	background-color: #E6BB48;
+	color: black;
+}
+
+.warning {
+	background-color: #E6A248;
+	color: black;
+}
+
+.critical {
+	background-color: red;
+	color: black;
+}

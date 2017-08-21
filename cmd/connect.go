@@ -39,8 +39,10 @@ func init() {
 	RootCmd.AddCommand(connectCmd)
 	connectCmd.Flags().StringP("address", "a", "localhost:50051", "Provide server address")
 	connectCmd.Flags().StringP("prefix", "p", "", "Provide a prefix for each line")
+	connectCmd.Flags().IntP("priority", "", 0, "Priority of message")
 	connectCmd.Flags().BoolP("pass-through", "", false, "Print lines to stdout")
 	viper.BindPFlag("connect.address", connectCmd.Flags().Lookup("address"))
 	viper.BindPFlag("connect.prefix", connectCmd.Flags().Lookup("prefix"))
+	viper.BindPFlag("connect.priority", connectCmd.Flags().Lookup("priority"))
 	viper.BindPFlag("connect.pass-through", connectCmd.Flags().Lookup("pass-through"))
 }

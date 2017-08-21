@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"log"
 	"math"
 	"net"
@@ -23,15 +24,20 @@ type server struct {
 func (s *server) SendLine(ctx context.Context, in *pb.LineMessage) (*pb.LineResult, error) {
 	numberOfLines.Inc()
 	breakAt := viper.GetInt("web.break")
+	prio := int32(math.Max(0, math.Min(9, float64(in.Priority))))
 	if breakAt == 0 {
-		s.hub.broadcast <- []byte(in.Line)
+		s.broadcastLine(in.Line, prio)
 	} else {
 		iterations := int(len(in.Line) / breakAt)
 		for start := 0; start <= iterations; start++ {
-			s.hub.broadcast <- []byte(in.Line[start*breakAt : int32(math.Min(float64((start+1)*breakAt), float64(len(in.Line))))])
+			s.broadcastLine(in.Line[start*breakAt:int32(math.Min(float64((start+1)*breakAt), float64(len(in.Line))))], prio)
 		}
 	}
 	return &pb.LineResult{Result: true}, nil
+}
+
+func (s *server) broadcastLine(line string, priority int32) {
+	s.hub.broadcast <- []byte(fmt.Sprintf("{ Line: '%s', Priority: %d }", line, priority))
 }
 
 func (s *server) run() {
