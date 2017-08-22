@@ -7,8 +7,6 @@ build:
   goarch:
     - amd64
 
-    - README.md
-
 release:
   draft: true
 
