@@ -1,6 +1,7 @@
 # go-logsink
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/sascha-andres/go-logsink)](https://goreportcard.com/report/github.com/sascha-andres/go-logsink) [![codebeat badge](https://codebeat.co/badges/6e2d5bf5-5ca2-41a3-842d-631ba32d196c)](https://codebeat.co/projects/github-com-sascha-andres-go-logsink) [![Code Climate](https://codeclimate.com/github/sascha-andres/go-logsink/badges/gpa.svg)](https://codeclimate.com/github/sascha-andres/go-logsink)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fsascha-andres%2Fgo-logsink.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fsascha-andres%2Fgo-logsink?ref=badge_shield)
 
 ## What is go-logsink
 
@@ -83,3 +84,7 @@ Rudimentary tests were done, no in depth testing, though
 ||version command|
 ||Allow providing a prefix|
 |20170110|Initial version|
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fsascha-andres%2Fgo-logsink.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fsascha-andres%2Fgo-logsink?ref=badge_large)
