@@ -39,12 +39,12 @@ More usage: See [go-logsink documentation](docs/go-logsink.md)
 
 ## Develop
 
-The applicatin uses a very simple protocol buffer based RPC service to communicate. You should install Protocol Buffers v3.1.0
+The application uses a very simple protocol buffer based RPC service to communicate. You should install Protocol Buffers v3.1.0
 from https://github.com/google/protobuf/releases/tag/v3.1.0 ( used to create this project initially ).
 
 The Makefile contains a `protobuf` target which creates the implementation from the specification ( located in `logsink/logsink.proto` ).
 
-The project uses govendor ( https://github.com/kardianos/govendor ) to populate the vedor directory. Use `govendor sync` to download the libraries. This can take quite a while.
+The project uses go modules
 
 ### Cross compiling Windows
 
