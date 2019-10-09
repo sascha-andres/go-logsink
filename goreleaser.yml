@@ -7,22 +7,5 @@ build:
   goarch:
     - amd64
 
-archive:
- files:
-    - www/index.html
-    - www/css/main.css
-    - www/js/main.js
-    - README.md
-
 release:
   draft: true
-
-#fpm:
-#  vendor: Sascha Andres
-#  homepage: https://github.com/go-task/task
-#  maintainer: Sascha Andres <sascha.andres@outlook.com>
-#  description: Log aggregation
-#  license: Apache 2.0
-#  formats:
-#    - deb
-#    - rpm

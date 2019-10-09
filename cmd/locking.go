@@ -16,7 +16,8 @@ package cmd
 
 import (
 	"fmt"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/nightlyone/lockfile"
 	"github.com/spf13/viper"

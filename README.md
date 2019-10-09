@@ -1,6 +1,7 @@
 # go-logsink
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/sascha-andres/go-logsink)](https://goreportcard.com/report/github.com/sascha-andres/go-logsink) [![codebeat badge](https://codebeat.co/badges/6e2d5bf5-5ca2-41a3-842d-631ba32d196c)](https://codebeat.co/projects/github-com-sascha-andres-go-logsink)
+[![Go Report Card](https://goreportcard.com/badge/github.com/sascha-andres/go-logsink)](https://goreportcard.com/report/github.com/sascha-andres/go-logsink) [![codebeat badge](https://codebeat.co/badges/6e2d5bf5-5ca2-41a3-842d-631ba32d196c)](https://codebeat.co/projects/github-com-sascha-andres-go-logsink) [![Code Climate](https://codeclimate.com/github/sascha-andres/go-logsink/badges/gpa.svg)](https://codeclimate.com/github/sascha-andres/go-logsink)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fsascha-andres%2Fgo-logsink.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fsascha-andres%2Fgo-logsink?ref=badge_shield)
 
 ## What is go-logsink
 
@@ -36,38 +37,14 @@ You can even start a webserver using
 
 More usage: See [go-logsink documentation](docs/go-logsink.md)
 
-## Relay
-
-_DEPRECATED_ Recommended solution is to use `go-logsing listen ... | go-logsing connect ...`
-
-If you want to forward data from one network to another you can do this using the relay method.
-
-    |--------|      |-------|      |--------|
-    | client | ---> | relay | ---> | server |
-    |--------|      |-------|      |--------|
-
-Simple put: a relay is an instance acting as both a server and a client.
-
-Create a server on your-machine:
-
-    go-logsink listen --bind ":50051"
-
-Create a relay on man-in-the-middle:
-
-    go-logsink relay --bind ":50051" --address "your-machine:50051"
-
-Create a client on server:
-
-    go-logsink connect --address "man-in-the-middle:50051"
-
 ## Develop
 
-The applicatin uses a very simple protocol buffer based RPC service to communicate. You should install Protocol Buffers v3.1.0
+The application uses a very simple protocol buffer based RPC service to communicate. You should install Protocol Buffers v3.1.0
 from https://github.com/google/protobuf/releases/tag/v3.1.0 ( used to create this project initially ).
 
 The Makefile contains a `protobuf` target which creates the implementation from the specification ( located in `logsink/logsink.proto` ).
 
-The project uses govendor ( https://github.com/kardianos/govendor ) to populate the vedor directory. Use `govendor sync` to download the libraries. This can take quite a while.
+The project uses go modules
 
 ### Cross compiling Windows
 
@@ -84,6 +61,7 @@ Rudimentary tests were done, no in depth testing, though
 
 |Version|Description|
 |---|---|
+|v1.2.0|update to go-modules|
 |v1.1.0|Web included in binary|
 ||Deprecated relaying|
 ||Added prometheus metrics|

@@ -15,10 +15,9 @@
 package server
 
 import (
-	"log"
 	"net"
 
-	"fmt"
+	log "github.com/sirupsen/logrus"
 
 	pb "github.com/sascha-andres/go-logsink/logsink"
 	"github.com/spf13/viper"
@@ -32,13 +31,13 @@ type server struct{}
 
 // SendLine implements logsink.SendLine
 func (s *server) SendLine(ctx context.Context, in *pb.LineMessage) (*pb.LineResult, error) {
-	fmt.Println(in.Line)
+	log.Println(in.Line)
 	return &pb.LineResult{Result: true}, nil
 }
 
 // Listen starts the server
 func Listen() {
-	fmt.Printf("Binding definition provided: %s\n", viper.GetString("listen.bind"))
+	log.Printf("Binding definition provided: %s\n", viper.GetString("listen.bind"))
 
 	lis, err := net.Listen("tcp", viper.GetString("listen.bind"))
 	if err != nil {
