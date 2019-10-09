@@ -61,6 +61,7 @@ Rudimentary tests were done, no in depth testing, though
 
 |Version|Description|
 |---|---|
+|v1.2.0|update to go-modules|
 |v1.1.0|Web included in binary|
 ||Deprecated relaying|
 ||Added prometheus metrics|
@@ -84,7 +85,3 @@ Rudimentary tests were done, no in depth testing, though
 ||version command|
 ||Allow providing a prefix|
 |20170110|Initial version|
-
-
-## License
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fsascha-andres%2Fgo-logsink.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fsascha-andres%2Fgo-logsink?ref=badge_large)
