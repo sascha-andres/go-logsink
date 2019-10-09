@@ -61,7 +61,7 @@ Rudimentary tests were done, no in depth testing, though
 
 |Version|Description|
 |---|---|
-|v1.2.0|update to go-modules|
+|v1.3.0|update to go-modules|
 |v1.1.0|Web included in binary|
 ||Deprecated relaying|
 ||Added prometheus metrics|
