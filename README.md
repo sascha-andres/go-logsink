@@ -61,6 +61,9 @@ Rudimentary tests were done, no in depth testing, though
 
 |Version|Description|
 |---|---|
+|v2.0.0|new ui based on vue.js|
+||removed options for client side code|
+||add option to load ui from local path|
 |v1.3.0|update to go-modules|
 |v1.1.0|Web included in binary|
 ||Deprecated relaying|
