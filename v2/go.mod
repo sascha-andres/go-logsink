@@ -3,6 +3,7 @@ module github.com/sascha-andres/go-logsink/v2
 go 1.13
 
 require (
+	github.com/arl/statsviz v0.2.0
 	github.com/beorn7/perks v0.0.0-20160804104726-4c0e84591b9a // indirect
 	github.com/cpuguy83/go-md2man v1.0.10 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect

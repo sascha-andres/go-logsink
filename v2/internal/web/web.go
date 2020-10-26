@@ -16,6 +16,7 @@ package web
 
 import (
 	"context"
+	"github.com/arl/statsviz"
 	"net/http"
 	"os"
 	"os/signal"
@@ -60,6 +61,8 @@ func Start() {
 	r.HandleFunc("/api/go-logsink/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(srv.hub, w, r)
 	})
+	r.Methods("GET").Path("/debug/statsviz/ws").Name("GET /debug/statsviz/ws").HandlerFunc(statsviz.Ws)
+	r.Methods("GET").PathPrefix("/debug/statsviz/").Name("GET /debug/statsviz/").Handler(statsviz.Index)
 	r.Handle("/metrics", promhttp.Handler())
 	if "" == webDir {
 		log.Print("serving static files from binary")                                                    // js template
