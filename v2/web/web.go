@@ -15,7 +15,6 @@
 package web
 
 import (
-	"bytes"
 	"context"
 	"net/http"
 	"os"
@@ -24,8 +23,6 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
-
-	"strings"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -47,44 +44,12 @@ var (
 	})
 )
 
-type templateData struct {
-	Host   string
-	Limit  int32
-	Scheme string
-}
-
-func serveMainjs(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/js/main.js" {
-		http.Error(w, "Not found", 404)
-		return
-	}
-	if r.Method != "GET" {
-		http.Error(w, "Method not allowed", 405)
-		return
-	}
-	w.Header().Set("Content-Type", "text/javascript; charset=utf-8")
-	jsTemplate.Execute(w, templateData{Host: r.Host, Limit: int32(viper.GetInt("web.limit")), Scheme: getScheme(r)})
-}
-
-func getScheme(r *http.Request) string {
-	var scheme string
-	if len(r.Header["Referer"]) == 0 {
-		scheme = "ws"
-	} else {
-		if strings.HasPrefix(r.Header["Referer"][0], "https") {
-			scheme = "wss"
-		} else {
-			scheme = "ws"
-		}
-	}
-	return scheme
-}
-
 // Start initializes the webserver and the server receving the lines
 func Start() {
 	log.Printf("Binding definition provided: %s", viper.GetString("web.bind"))
 	log.Printf("Serving at: %s", viper.GetString("web.serve"))
-	log.Printf("Line limit: %d", viper.GetInt("web.limit"))
+	webDir := viper.GetString("web.directory")
+	log.Printf("Directory: %s", webDir)
 
 	srv := &server{}
 	go srv.run()
@@ -92,12 +57,17 @@ func Start() {
 	prometheus.MustRegister(numberOfLines)
 
 	r := mux.NewRouter()
-	r.HandleFunc("/js/main.js", serveMainjs) // js template
 	r.HandleFunc("/api/go-logsink/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(srv.hub, w, r)
 	})
 	r.Handle("/metrics", promhttp.Handler())
-	r.PathPrefix("/").Handler(handlers.CombinedLoggingHandler(os.Stdout, http.FileServer(statikFS))) // static files
+	if "" == webDir {
+		log.Print("serving static files from binary")                                                    // js template
+		r.PathPrefix("/").Handler(handlers.CombinedLoggingHandler(os.Stdout, http.FileServer(statikFS))) // static files
+	} else {
+		log.Printf("serving static files from %s", webDir)
+		r.PathPrefix("/").Handler(handlers.CombinedLoggingHandler(os.Stdout, http.FileServer(http.Dir(webDir)))) // static files
+	}
 	http.Handle("/", r)
 	stop := make(chan os.Signal)
 	signal.Notify(stop, os.Interrupt)
@@ -112,8 +82,12 @@ func Start() {
 	log.Println("Shutting down the server...")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	h.Shutdown(ctx)
-	log.Println("Server gracefully stopped")
+	err := h.Shutdown(ctx)
+	if err != nil {
+		log.Printf("error shutting down gracefully: %s", err)
+	} else {
+		log.Println("Server gracefully stopped")
+	}
 }
 
 func init() {
@@ -122,15 +96,4 @@ func init() {
 		log.Fatal("Error initializing filesystem: ", err)
 	}
 	statikFS = files
-	file, err := statikFS.Open("/js/main.js")
-	if err != nil {
-		log.Fatal("Error reading js template: ", err)
-	}
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(file)
-	tmpl, err := template.New("jsTemplate").Parse(buf.String())
-	if err != nil {
-		log.Fatal("Error parsing template: ", err)
-	}
-	jsTemplate = tmpl
 }

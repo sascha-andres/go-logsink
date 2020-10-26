@@ -37,11 +37,9 @@ to see the logs in your browser.
 func init() {
 	RootCmd.AddCommand(webCmd)
 	webCmd.Flags().StringP("bind", "b", ":50051", "Provide bind definition")
-	webCmd.Flags().StringP("serve", "s", ":8080", "Provide bind definition")
-	webCmd.Flags().Int32P("limit", "l", 0, "Limit number of visible lines")
-	webCmd.Flags().Uint32P("break", "", 0, "Set this to the column # to break at")
+	webCmd.Flags().StringP("serve", "s", ":8080", "Provide bind definition for web ui")
+	webCmd.Flags().StringP("from-directory", "d", "", "provide a directory containing html files")
 	viper.BindPFlag("web.bind", webCmd.Flags().Lookup("bind"))
 	viper.BindPFlag("web.serve", webCmd.Flags().Lookup("serve"))
-	viper.BindPFlag("web.limit", webCmd.Flags().Lookup("limit"))
-	viper.BindPFlag("web.break", webCmd.Flags().Lookup("break"))
+	viper.BindPFlag("web.directory", webCmd.Flags().Lookup("from-directory"))
 }

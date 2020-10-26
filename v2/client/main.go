@@ -16,20 +16,63 @@ package client
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
-	"os"
-
 	log "github.com/sirupsen/logrus"
+	"os"
 
 	pb "github.com/sascha-andres/go-logsink/v2/logsink"
 	"github.com/spf13/viper"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+
+	"go.starlark.net/starlark"
 )
 
 var (
-	linePrefix string
+	linePrefix             string
+	thread                 *starlark.Thread
+	filterFunction         starlark.Value
+	filterFunctionProvided bool
 )
+
+// setupFilter creates the Starlark filter function if provided
+func setupFilter() error {
+	ff := viper.GetString("connect.filter-function")
+	if ff == "" {
+		return nil
+	}
+
+	// Execute Starlark program in a file.
+	thread = &starlark.Thread{Name: "filter thread"}
+	globals, err := starlark.ExecFile(thread, ff, nil, nil)
+	if err != nil {
+		return err
+	}
+
+	if _, ok := globals["filter"]; !ok {
+		return errors.New("function filter not found")
+	}
+
+	// Retrieve a module global.
+	filterFunction = globals["filter"]
+
+	filterFunctionProvided = true
+
+	return nil
+}
+
+// filtered returns true if a filter function is provided and it evaluates to true
+func filtered(line string) bool {
+	if !filterFunctionProvided {
+		return false
+	}
+	v, err := starlark.Call(thread, filterFunction, starlark.Tuple{starlark.String(line)}, nil)
+	if err != nil {
+		return false
+	}
+	return v == starlark.True
+}
 
 func setup() string {
 	if !viper.GetBool("connect.pass-through") {
@@ -41,12 +84,22 @@ func setup() string {
 // Connect is used to connect to a go-logsink server
 func Connect() {
 	linePrefix = setup()
+	err := setupFilter()
+	if err != nil {
+		log.Fatalf("could not setup filter: %s", err)
+	}
+
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(viper.GetString("connect.address"), grpc.WithInsecure())
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		log.Fatalf("could not connect: %s", err)
 	}
-	defer conn.Close()
+	defer func() {
+		err := conn.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
 	c := pb.NewLogTransferClient(conn)
 
 	scanner := bufio.NewScanner(os.Stdin)
@@ -56,6 +109,9 @@ func Connect() {
 			err error
 		)
 		content := scanner.Text()
+		if filtered(content) {
+			continue
+		}
 		if viper.GetBool("connect.pass-through") {
 			fmt.Println(content)
 		}

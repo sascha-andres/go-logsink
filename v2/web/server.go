@@ -1,6 +1,7 @@
 package web
 
 import (
+	"encoding/json"
 	"fmt"
 	"math"
 	"net"
@@ -17,9 +18,17 @@ import (
 )
 
 // server is used to implement logsink.LogTransferServer.
-type server struct {
-	hub *hub
-}
+type (
+	server struct {
+		hub           *hub
+		numberOfLines int64
+	}
+	lineType struct {
+		Line     string
+		Priority int32
+		Key      string
+	}
+)
 
 // SendLine implements logsink.SendLine
 func (s *server) SendLine(ctx context.Context, in *pb.LineMessage) (*pb.LineResult, error) {
@@ -38,7 +47,21 @@ func (s *server) SendLine(ctx context.Context, in *pb.LineMessage) (*pb.LineResu
 }
 
 func (s *server) broadcastLine(line string, priority int32) {
-	s.hub.broadcast <- []byte(fmt.Sprintf("{ Line: '%s', Priority: %d }", line, priority))
+	s.numberOfLines++
+	obj := lineType{
+		Line:     line,
+		Priority: priority,
+		Key:      fmt.Sprintf("%d", s.numberOfLines),
+	}
+	if line == "" {
+		obj.Line = " "
+	}
+	data, err := json.Marshal(obj)
+	if err != nil {
+		log.Errorf("error creating message for websocket: %s", err)
+	} else {
+		s.hub.broadcast <- data
+	}
 }
 
 func (s *server) run() {

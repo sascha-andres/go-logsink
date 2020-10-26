@@ -18,7 +18,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/google/gops/agent"
-	"github.com/sascha-andres/go-logsink/v2/cmd"
+	"github.com/sascha-andres/go-logsink/v2/v2/cmd"
 )
 
 var version string = "develop"

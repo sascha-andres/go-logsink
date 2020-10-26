@@ -32,7 +32,7 @@ func handleLock(method func()) {
 
 		// Error handling is essential, as we only try to get the lock.
 		if err != nil {
-			log.Fatal(fmt.Errorf("Cannot lock %q, reason: %v", lock, err))
+			log.Fatal(fmt.Errorf("cannot lock %q, reason: %v", lock, err))
 		}
 
 		defer lock.Unlock()

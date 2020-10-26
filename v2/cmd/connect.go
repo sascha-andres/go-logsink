@@ -25,7 +25,14 @@ var connectCmd = &cobra.Command{
 	Use:   "connect",
 	Short: "Connect to a go-logsink server and forward stdin",
 	Long: `This command is used to connect to a go-logsink server.
-Call it to forward data piped ito this application to the server.`,
+Call it to forward data piped ito this application to the server.
+
+If you want to filter the function maust be named filter and return a bool:
+
+    def filter(line):
+      return line.startswith("a")
+
+The above filter function will not print lines starting with the letter a (lowercase)`,
 	Run: func(cmd *cobra.Command, args []string) {
 		handleLock(client.Connect)
 	},
@@ -37,8 +44,11 @@ func init() {
 	connectCmd.Flags().StringP("prefix", "p", "", "Provide a prefix for each line")
 	connectCmd.Flags().IntP("priority", "", 0, "Priority of message")
 	connectCmd.Flags().BoolP("pass-through", "", false, "Print lines to stdout")
-	viper.BindPFlag("connect.address", connectCmd.Flags().Lookup("address"))
-	viper.BindPFlag("connect.prefix", connectCmd.Flags().Lookup("prefix"))
-	viper.BindPFlag("connect.priority", connectCmd.Flags().Lookup("priority"))
-	viper.BindPFlag("connect.pass-through", connectCmd.Flags().Lookup("pass-through"))
+	connectCmd.Flags().StringP("filter-function", "", "", "Provide path to starlark file to filter lines")
+
+	_ = viper.BindPFlag("connect.address", connectCmd.Flags().Lookup("address"))
+	_ = viper.BindPFlag("connect.prefix", connectCmd.Flags().Lookup("prefix"))
+	_ = viper.BindPFlag("connect.priority", connectCmd.Flags().Lookup("priority"))
+	_ = viper.BindPFlag("connect.pass-through", connectCmd.Flags().Lookup("pass-through"))
+	_ = viper.BindPFlag("connect.filter-function", connectCmd.Flags().Lookup("filter-function"))
 }
