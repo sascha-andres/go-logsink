@@ -14,7 +14,7 @@
 package cmd
 
 import (
-	"github.com/sascha-andres/go-logsink/v2/server"
+	server2 "github.com/sascha-andres/go-logsink/v2/internal/server"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -26,7 +26,7 @@ var listenCmd = &cobra.Command{
 	Long: `This command is used to create a go-logsink server.
 Call it to have clients forward log messages here.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		handleLock(server.Listen)
+		handleLock(server2.Listen)
 	},
 }
 

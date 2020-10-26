@@ -32,7 +32,7 @@ import (
 
 	"github.com/rakyll/statik/fs"
 
-	_ "github.com/sascha-andres/go-logsink/v2/web/statik" // get access to data
+	_ "github.com/sascha-andres/go-logsink/v2/internal/web/statik" // get access to data
 )
 
 var (

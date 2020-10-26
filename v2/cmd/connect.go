@@ -15,7 +15,7 @@
 package cmd
 
 import (
-	"github.com/sascha-andres/go-logsink/v2/client"
+	client2 "github.com/sascha-andres/go-logsink/v2/internal/client"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -34,7 +34,7 @@ If you want to filter the function maust be named filter and return a bool:
 
 The above filter function will not print lines starting with the letter a (lowercase)`,
 	Run: func(cmd *cobra.Command, args []string) {
-		handleLock(client.Connect)
+		handleLock(client2.Connect)
 	},
 }
 
