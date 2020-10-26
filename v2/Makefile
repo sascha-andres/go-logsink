@@ -8,7 +8,7 @@ windows: docs  ## build for windows
 	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -a -ldflags '-s' -o go-logsink.exe
 
 protobuf: ## run protobuf stuff
-	./check_protobuf.sh
+	../check_protobuf.sh
 	protoc -I logsink/ logsink/logsink.proto --go_out=plugins=grpc:logsink
 
 ui:       ## create ui
