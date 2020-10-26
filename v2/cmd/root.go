@@ -53,7 +53,10 @@ func init() {
 
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.go-logsink.yaml)")
 	RootCmd.PersistentFlags().StringP("lockfile", "", "", "Specify a lockfile")
+	RootCmd.PersistentFlags().BoolP("debug", "", false, "Enable debug mode (statsviz)")
+
 	viper.BindPFlag("lockfile", RootCmd.PersistentFlags().Lookup("lockfile"))
+	viper.BindPFlag("debug", RootCmd.PersistentFlags().Lookup("debug"))
 
 }
 

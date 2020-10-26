@@ -15,7 +15,11 @@
 package server
 
 import (
+	"github.com/arl/statsviz"
+	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 	"net"
+	"net/http"
 
 	log "github.com/sirupsen/logrus"
 
@@ -39,6 +43,10 @@ func (s *server) SendLine(ctx context.Context, in *pb.LineMessage) (*pb.LineResu
 func Listen() {
 	log.Printf("Binding definition provided: %s\n", viper.GetString("listen.bind"))
 
+	if viper.GetBool("debug") {
+		go startDebug()
+	}
+
 	lis, err := net.Listen("tcp", viper.GetString("listen.bind"))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -49,5 +57,16 @@ func Listen() {
 	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
+	}
+}
+
+func startDebug() {
+	r := mux.NewRouter()
+	r.Methods("GET").Path("/debug/statsviz/ws").Name("GET /debug/statsviz/ws").HandlerFunc(statsviz.Ws)
+	r.Methods("GET").PathPrefix("/debug/statsviz/").Name("GET /debug/statsviz/").Handler(statsviz.Index)
+
+	h := &http.Server{Addr: viper.GetString("web.serve"), Handler: handlers.CORS()(handlers.ProxyHeaders(r))}
+	if err := h.ListenAndServe(); err != nil {
+		log.Fatal("ListenAndServe: ", err)
 	}
 }
