@@ -28,7 +28,9 @@ var webCmd = &cobra.Command{
 browser to localhost:8080 ( change the binding definition )
 to see the logs in your browser.
 
-  go-logsink web --serve ":80" --bind ":50051"`,
+  go-logsink web --serve ":80" --bind ":50051"
+
+If debug mode is enable you call open /debug/statsviz/ in your browser`,
 	Run: func(cmd *cobra.Command, args []string) {
 		handleLock(web2.Start)
 	},

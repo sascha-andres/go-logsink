@@ -24,7 +24,9 @@ var listenCmd = &cobra.Command{
 	Use:   "listen",
 	Short: "Start a server instance of go-logsink",
 	Long: `This command is used to create a go-logsink server.
-Call it to have clients forward log messages here.`,
+Call it to have clients forward log messages here.
+
+If debug mode is enable you call open /debug/statsviz/ in your browser`,
 	Run: func(cmd *cobra.Command, args []string) {
 		handleLock(server.Listen)
 	},
