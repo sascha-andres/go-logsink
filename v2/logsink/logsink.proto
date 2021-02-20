@@ -7,16 +7,18 @@ package logsink;
 /// messages from client to server
 service LogTransfer {
   /// SendLine sends a log line to the server
-  rpc SendLine(LineMessage) returns (LineResult) {}
+  rpc SendLine(stream LineMessage) returns (stream LineResult) {}
 }
 
 /// The single line message
 message LineMessage {
   string line = 1;
-  int32 priority = 2;
+	int32 priority = 2;
+	int64 sequence = 3;
 }
 
 /// Result of the log send
 message LineResult {
-  bool result = 1;
+	bool result = 1;
+	int64 sequence = 2;
 }
