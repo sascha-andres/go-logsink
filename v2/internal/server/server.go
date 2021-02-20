@@ -18,6 +18,7 @@ import (
 	"github.com/arl/statsviz"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"io"
 	"net"
 	"net/http"
 
@@ -25,18 +26,31 @@ import (
 
 	pb "github.com/sascha-andres/go-logsink/v2/logsink"
 	"github.com/spf13/viper"
-	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
 // server is used to implement logsink.LogTransferServer.
-type server struct{}
+type server struct {
+	pb.UnimplementedLogTransferServer
+}
 
 // SendLine implements logsink.SendLine
-func (s *server) SendLine(ctx context.Context, in *pb.LineMessage) (*pb.LineResult, error) {
-	log.Println(in.Line)
-	return &pb.LineResult{Result: true}, nil
+func (s *server) SendLine(stream pb.LogTransfer_SendLineServer) error {
+	for {
+		in, err := stream.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+		log.Println(in.Line)
+		stream.Send(&pb.LineResult{
+			Result:               true,
+			Sequence:             in.Sequence,
+		})
+	}
 }
 
 // Listen starts the server
@@ -52,7 +66,9 @@ func Listen() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterLogTransferServer(s, &server{})
+	pb.RegisterLogTransferServer(s, &server{
+		UnimplementedLogTransferServer: pb.UnimplementedLogTransferServer{},
+	})
 	// Register reflection service on gRPC server.
 	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {

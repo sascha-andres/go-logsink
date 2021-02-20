@@ -19,6 +19,7 @@ import (
 	"errors"
 	"fmt"
 	log "github.com/sirupsen/logrus"
+	"io"
 	"os"
 
 	pb "github.com/sascha-andres/go-logsink/v2/logsink"
@@ -103,9 +104,37 @@ func Connect() {
 	c := pb.NewLogTransferClient(conn)
 
 	scanner := bufio.NewScanner(os.Stdin)
+	client, err  := c.SendLine(context.Background())
+	if err != nil {
+		log.Panicf("error creating client to send log entries: %s", err)
+	}
+	defer func () {
+		err = client.CloseSend()
+		if err != nil {
+			log.Fatalf("error closing sending channel: %s", err)
+		}
+	}()
+	var (
+		sequence int64
+		receivedSequence int64
+	)
+	go func() {
+		for {
+			res, err := client.Recv()
+			if err == io.EOF {
+				log.Fatal("EOF")
+			}
+			if err != nil {
+				log.Fatalf("%s", err)
+			}
+			if receivedSequence < res.Sequence {
+				receivedSequence = res.Sequence
+			}
+		}
+	}()
+	sequence = 0
 	for scanner.Scan() {
 		var (
-			res *pb.LineResult
 			err error
 		)
 		content := scanner.Text()
@@ -115,16 +144,24 @@ func Connect() {
 		if viper.GetBool("connect.pass-through") {
 			fmt.Println(content)
 		}
+
 		if "" == linePrefix {
-			res, err = c.SendLine(context.Background(), &pb.LineMessage{Line: content, Priority: int32(viper.GetInt("connect.priority"))})
+			err = client.Send(&pb.LineMessage{Line: content, Priority: int32(viper.GetInt("connect.priority")), Sequence: sequence})
 		} else {
-			res, err = c.SendLine(context.Background(), &pb.LineMessage{Line: fmt.Sprintf("[%s] %s", linePrefix, content), Priority: int32(viper.GetInt("connect.priority"))})
+			err = client.Send(&pb.LineMessage{Line: fmt.Sprintf("[%s] %s", linePrefix, content), Priority: int32(viper.GetInt("connect.priority")), Sequence: sequence})
 		}
-		if !res.Result || nil != err {
+		if nil != err {
 			log.Fatal(err)
 		}
+		sequence++
 	}
 	if err := scanner.Err(); err != nil {
 		log.Warnf("reading standard input:", err)
+	}
+
+	for { // still a dirty hack
+		if receivedSequence == sequence - 1 {
+			break
+		}
 	}
 }
