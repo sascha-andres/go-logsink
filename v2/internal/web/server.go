@@ -54,9 +54,8 @@ func (s *server) SendLine(stream pb.LogTransfer_SendLineServer) error {
 				s.broadcastLine(in.Line[start*breakAt:int32(math.Min(float64((start+1)*breakAt), float64(len(in.Line))))], prio)
 			}
 		}
-		stream.Send(&pb.LineResult{
+		stream.SendAndClose(&pb.LineResult{
 			Result:               true,
-			Sequence:             in.Sequence,
 		})
 	}
 }

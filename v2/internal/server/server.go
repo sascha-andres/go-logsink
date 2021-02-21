@@ -46,9 +46,8 @@ func (s *server) SendLine(stream pb.LogTransfer_SendLineServer) error {
 			return err
 		}
 		log.Println(in.Line)
-		stream.Send(&pb.LineResult{
+		stream.SendAndClose(&pb.LineResult{
 			Result:               true,
-			Sequence:             in.Sequence,
 		})
 	}
 }
