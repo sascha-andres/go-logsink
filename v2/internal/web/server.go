@@ -35,9 +35,18 @@ func (s *server) SendLine(stream pb.LogTransfer_SendLineServer) error {
 	for {
 		in, err := stream.Recv()
 		if err == io.EOF {
-			return nil
+			break
 		}
 		if err != nil {
+			if err != nil {
+				log.Warnf("error reading request: %s", err)
+			}
+			err = stream.SendAndClose(&pb.LineResult{
+				Result:               false,
+			})
+			if err != nil {
+				log.Warnf("error sending result: %s", err)
+			}
 			return err
 		}
 		numberOfLines.Inc()
@@ -54,10 +63,14 @@ func (s *server) SendLine(stream pb.LogTransfer_SendLineServer) error {
 				s.broadcastLine(in.Line[start*breakAt:int32(math.Min(float64((start+1)*breakAt), float64(len(in.Line))))], prio)
 			}
 		}
-		stream.SendAndClose(&pb.LineResult{
-			Result:               true,
-		})
 	}
+	err := stream.SendAndClose(&pb.LineResult{
+		Result:               true,
+	})
+	if err != nil {
+		log.Warnf("error sending result: %s", err)
+	}
+	return nil
 }
 
 func (s *server) broadcastLine(line string, priority int32) {

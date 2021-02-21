@@ -40,16 +40,29 @@ func (s *server) SendLine(stream pb.LogTransfer_SendLineServer) error {
 	for {
 		in, err := stream.Recv()
 		if err == io.EOF {
-			return nil
+			break
 		}
 		if err != nil {
+			if err != nil {
+				log.Warnf("error reading request: %s", err)
+			}
+			err = stream.SendAndClose(&pb.LineResult{
+				Result:               false,
+			})
+			if err != nil {
+				log.Warnf("error sending result: %s", err)
+			}
 			return err
 		}
 		log.Println(in.Line)
-		stream.SendAndClose(&pb.LineResult{
-			Result:               true,
-		})
 	}
+	err := stream.SendAndClose(&pb.LineResult{
+		Result:               true,
+	})
+	if err != nil {
+		log.Warnf("error sending result: %s", err)
+	}
+	return nil
 }
 
 // Listen starts the server

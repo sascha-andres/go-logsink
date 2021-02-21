@@ -129,7 +129,7 @@ func Connect() {
 		}
 	}
 	res, err := client.CloseAndRecv()
-	if !res.Result || nil != err {
+	if !(nil != res && res.Result) || nil != err {
 		log.Fatal(err)
 	}
 	if err := scanner.Err(); err != nil {
