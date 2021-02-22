@@ -16,12 +16,14 @@ package web
 
 import (
 	"context"
+	"embed"
 	"github.com/arl/statsviz"
 	"net/http"
 	"os"
 	"os/signal"
 	"text/template"
 	"time"
+	"io/fs"
 
 	log "github.com/sirupsen/logrus"
 
@@ -30,14 +32,11 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/viper"
-
-	"github.com/rakyll/statik/fs"
-
-	_ "github.com/sascha-andres/go-logsink/v2/internal/web/statik" // get access to data
 )
 
 var (
-	statikFS      http.FileSystem
+	//go:embed dist
+	embededFiles  embed.FS
 	jsTemplate    *template.Template
 	numberOfLines = prometheus.NewCounter(prometheus.CounterOpts{
 		Name: "log_lines",
@@ -45,12 +44,29 @@ var (
 	})
 )
 
+func getFileSystem() http.FileSystem {
+	webDir := viper.GetString("web.directory")
+	log.Printf("Directory: %s", webDir)
+
+	if "" != webDir {
+		log.Printf("serving static files from %s", webDir)
+		log.Print("using live mode")
+		return http.Dir(webDir)
+	}
+
+	log.Print("serving static files from binary")
+	fsys, err := fs.Sub(embededFiles, "dist")
+	if err != nil {
+		panic(err)
+	}
+
+	return http.FS(fsys)
+}
+
 // Start initializes the webserver and the server receving the lines
 func Start() {
 	log.Printf("Binding definition provided: %s", viper.GetString("web.bind"))
 	log.Printf("Serving at: %s", viper.GetString("web.serve"))
-	webDir := viper.GetString("web.directory")
-	log.Printf("Directory: %s", webDir)
 
 	srv := &server{}
 	go srv.run()
@@ -66,13 +82,7 @@ func Start() {
 		r.Methods("GET").PathPrefix("/debug/statsviz/").Name("GET /debug/statsviz/").Handler(statsviz.Index)
 	}
 	r.Handle("/metrics", promhttp.Handler())
-	if "" == webDir {
-		log.Print("serving static files from binary")                                                    // js template
-		r.PathPrefix("/").Handler(handlers.CombinedLoggingHandler(os.Stdout, http.FileServer(statikFS))) // static files
-	} else {
-		log.Printf("serving static files from %s", webDir)
-		r.PathPrefix("/").Handler(handlers.CombinedLoggingHandler(os.Stdout, http.FileServer(http.Dir(webDir)))) // static files
-	}
+	r.PathPrefix("/").Handler(handlers.CombinedLoggingHandler(os.Stdout, http.FileServer(getFileSystem())))
 	http.Handle("/", r)
 	stop := make(chan os.Signal)
 	signal.Notify(stop, os.Interrupt)
@@ -93,12 +103,4 @@ func Start() {
 	} else {
 		log.Println("Server gracefully stopped")
 	}
-}
-
-func init() {
-	files, err := fs.New()
-	if err != nil {
-		log.Fatal("Error initializing filesystem: ", err)
-	}
-	statikFS = files
 }
