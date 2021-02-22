@@ -69,13 +69,13 @@ docker-release: ## push docker container
 	docker push $(DOCKER_REGISTRY)$(BINARY_NAME):latest
 	docker push $(DOCKER_REGISTRY)$(BINARY_NAME):$(VERSION)
 
-linux: ui docs    ## build for linux
+linux: docs    ## build for linux
 	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-s' -o go-logsink
 
-osx: ui docs      ## build for osx
+osx: docs      ## build for osx
 	CGO_ENABLED=0 GOOS=darwin go build -a -ldflags '-s' -o go-logsink.osx
 
-windows: ui docs  ## build for windows
+windows: docs  ## build for windows
 	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -a -ldflags '-s' -o go-logsink.exe
 
 protobuf: ## run protobuf stuff
@@ -84,9 +84,12 @@ protobuf: ## run protobuf stuff
 
 ui:       ## create ui
 	cd ui && npm install
+	cd ui && npm rebuild node-sass
 	cd ui && npm run build
 	-rm -rf internal/web/dist
 	cp -R ui/dist internal/web
+
+ci: ui linux osx windows ## run to create everything
 
 docs: ## generate docs
 	@go run main.go doc
