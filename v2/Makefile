@@ -1,10 +1,10 @@
-linux: docs    ## build for linux
+linux: ui docs    ## build for linux
 	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-s' -o go-logsink
 
-osx: docs      ## build for osx
+osx: ui docs      ## build for osx
 	CGO_ENABLED=0 GOOS=darwin go build -a -ldflags '-s' -o go-logsink.osx
 
-windows: docs  ## build for windows
+windows: ui docs  ## build for windows
 	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -a -ldflags '-s' -o go-logsink.exe
 
 protobuf: ## run protobuf stuff
@@ -14,13 +14,11 @@ protobuf: ## run protobuf stuff
 ui:       ## create ui
 	cd ui && npm install
 	cd ui && npm run build
+	-rm -rf internal/web/dist
+	cp -R ui/dist internal/web
 
 docs: ## generate docs
 	@go run main.go doc
-
-statik: ui  ## create statik src
-	-rm internal/web/statik/statik.go
-	cd internal/web && statik -src=../../ui/dist
 
 all: linux osx windows  ## build all
 
