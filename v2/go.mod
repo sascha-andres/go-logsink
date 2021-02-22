@@ -27,7 +27,6 @@ require (
 	github.com/prometheus/client_golang v0.8.1-0.20170511141251-42552c195dd3
 	github.com/prometheus/common v0.0.0-20170731114204-61f87aac8082 // indirect
 	github.com/prometheus/procfs v0.0.0-20170502131342-d098ca18df8b // indirect
-	github.com/rakyll/statik v0.1.1-0.20170410192944-89fe3459b5c8
 	github.com/sirupsen/logrus v1.0.2-0.20170728074214-181d419aa9e2
 	github.com/spf13/afero v0.0.0-20161226091939-90dd71edc4d0 // indirect
 	github.com/spf13/cast v0.0.0-20161225125648-56a7ecbeb18d // indirect

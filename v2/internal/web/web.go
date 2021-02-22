@@ -32,8 +32,6 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/viper"
-
-	_ "github.com/sascha-andres/go-logsink/v2/internal/web/statik" // get access to data
 )
 
 var (
