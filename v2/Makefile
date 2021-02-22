@@ -36,9 +36,12 @@ endif
 	docker run --rm -it -v $(shell pwd):/data cytopia/yamllint -f parsable $(shell git ls-files '*.yml' '*.yaml') $(OUTPUT_OPTIONS)
 
 clean: ## remove generated files
-	rm go-logsink
-	rm go-logsink.exe
-	rm go-logsink.osx
+	-rm go-logsink
+	-rm go-logsink.exe
+	-rm go-logsink.osx
+	-rm -rf ui/node_modules
+	-rm -rf ui/dist
+	-rm -rf internal/web/dist
 
 test: ## Run tests
 ifeq ($(EXPORT_RESULT), true)
