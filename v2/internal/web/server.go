@@ -3,12 +3,11 @@ package web
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"math"
 	"net"
 
 	log "github.com/sirupsen/logrus"
-
-	"golang.org/x/net/context"
 
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
@@ -20,6 +19,7 @@ import (
 // server is used to implement logsink.LogTransferServer.
 type (
 	server struct {
+		pb.UnimplementedLogTransferServer
 		hub           *hub
 		numberOfLines int64
 	}
@@ -31,19 +31,46 @@ type (
 )
 
 // SendLine implements logsink.SendLine
-func (s *server) SendLine(ctx context.Context, in *pb.LineMessage) (*pb.LineResult, error) {
-	numberOfLines.Inc()
-	breakAt := viper.GetInt("web.break")
-	prio := int32(math.Max(0, math.Min(9, float64(in.Priority))))
-	if breakAt == 0 {
-		s.broadcastLine(in.Line, prio)
-	} else {
-		iterations := int(len(in.Line) / breakAt)
-		for start := 0; start <= iterations; start++ {
-			s.broadcastLine(in.Line[start*breakAt:int32(math.Min(float64((start+1)*breakAt), float64(len(in.Line))))], prio)
+func (s *server) SendLine(stream pb.LogTransfer_SendLineServer) error {
+	for {
+		in, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			if err != nil {
+				log.Warnf("error reading request: %s", err)
+			}
+			err = stream.SendAndClose(&pb.LineResult{
+				Result:               false,
+			})
+			if err != nil {
+				log.Warnf("error sending result: %s", err)
+			}
+			return err
+		}
+		numberOfLines.Inc()
+		breakAt := viper.GetInt("web.break")
+		prio := int32(math.Max(0, math.Min(9, float64(in.Priority))))
+		if viper.GetBool("debug") {
+			fmt.Println(in.Line)
+		}
+		if breakAt == 0 {
+			s.broadcastLine(in.Line, prio)
+		} else {
+			iterations := int(len(in.Line) / breakAt)
+			for start := 0; start <= iterations; start++ {
+				s.broadcastLine(in.Line[start*breakAt:int32(math.Min(float64((start+1)*breakAt), float64(len(in.Line))))], prio)
+			}
 		}
 	}
-	return &pb.LineResult{Result: true}, nil
+	err := stream.SendAndClose(&pb.LineResult{
+		Result:               true,
+	})
+	if err != nil {
+		log.Warnf("error sending result: %s", err)
+	}
+	return nil
 }
 
 func (s *server) broadcastLine(line string, priority int32) {

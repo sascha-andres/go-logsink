@@ -103,9 +103,12 @@ func Connect() {
 	c := pb.NewLogTransferClient(conn)
 
 	scanner := bufio.NewScanner(os.Stdin)
+	client, err  := c.SendLine(context.Background())
+	if err != nil {
+		log.Panicf("error creating client to send log entries: %s", err)
+	}
 	for scanner.Scan() {
 		var (
-			res *pb.LineResult
 			err error
 		)
 		content := scanner.Text()
@@ -115,14 +118,19 @@ func Connect() {
 		if viper.GetBool("connect.pass-through") {
 			fmt.Println(content)
 		}
+
 		if "" == linePrefix {
-			res, err = c.SendLine(context.Background(), &pb.LineMessage{Line: content, Priority: int32(viper.GetInt("connect.priority"))})
+			err = client.Send(&pb.LineMessage{Line: content, Priority: int32(viper.GetInt("connect.priority"))})
 		} else {
-			res, err = c.SendLine(context.Background(), &pb.LineMessage{Line: fmt.Sprintf("[%s] %s", linePrefix, content), Priority: int32(viper.GetInt("connect.priority"))})
+			err = client.Send(&pb.LineMessage{Line: fmt.Sprintf("[%s] %s", linePrefix, content), Priority: int32(viper.GetInt("connect.priority"))})
 		}
-		if !res.Result || nil != err {
+		if nil != err {
 			log.Fatal(err)
 		}
+	}
+	res, err := client.CloseAndRecv()
+	if !(nil != res && res.Result) || nil != err {
+		log.Fatal(err)
 	}
 	if err := scanner.Err(); err != nil {
 		log.Warnf("reading standard input:", err)

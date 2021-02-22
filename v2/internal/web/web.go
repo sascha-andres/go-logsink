@@ -75,7 +75,7 @@ func Start() {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/api/go-logsink/ws", func(w http.ResponseWriter, r *http.Request) {
-		serveWs(srv.hub, w, r)
+		serveWebSocket(srv.hub, w, r)
 	})
 	if viper.GetBool("debug") {
 		r.Methods("GET").Path("/debug/statsviz/ws").Name("GET /debug/statsviz/ws").HandlerFunc(statsviz.Ws)
