@@ -1,10 +1,10 @@
 GOCMD=go
 GOTEST=$(GOCMD) test
 GOVET=$(GOCMD) vet
-BINARY_NAME=example
-VERSION?=0.0.0
+BINARY_NAME=go-logsink
+VERSION?=2.1.0
 SERVICE_PORT?=3000
-DOCKER_REGISTRY?= #if set it should finished by /
+DOCKER_REGISTRY?=briefbote/
 EXPORT_RESULT?=false # for CI please set EXPORT_RESULT to true
 
 GREEN  := $(shell tput -Txterm setaf 2)
@@ -56,15 +56,15 @@ ifeq ($(EXPORT_RESULT), true)
 	gocov convert profile.cov | gocov-xml > coverage.xml
 endif
 
-#docker-build: ## build docker container
-#	docker build --rm --tag $(BINARY_NAME) .
+docker-build: ## build docker container
+	docker build --rm --tag $(BINARY_NAME) .
 
-#docker-release: ## push docker container
-#	docker tag $(BINARY_NAME) $(DOCKER_REGISTRY)$(BINARY_NAME):latest
-#	docker tag $(BINARY_NAME) $(DOCKER_REGISTRY)$(BINARY_NAME):$(VERSION)
-#	# Push the docker images
-#	docker push $(DOCKER_REGISTRY)$(BINARY_NAME):latest
-#	docker push $(DOCKER_REGISTRY)$(BINARY_NAME):$(VERSION)
+docker-release: ## push docker container
+	docker tag $(BINARY_NAME) $(DOCKER_REGISTRY)$(BINARY_NAME):latest
+	docker tag $(BINARY_NAME) $(DOCKER_REGISTRY)$(BINARY_NAME):$(VERSION)
+	# Push the docker images
+	docker push $(DOCKER_REGISTRY)$(BINARY_NAME):latest
+	docker push $(DOCKER_REGISTRY)$(BINARY_NAME):$(VERSION)
 
 linux: ui docs    ## build for linux
 	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-s' -o go-logsink
