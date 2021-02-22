@@ -1,6 +1,6 @@
 module github.com/sascha-andres/go-logsink/v2
 
-go 1.13
+go 1.16
 
 require (
 	github.com/arl/statsviz v0.2.0
