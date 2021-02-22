@@ -16,7 +16,7 @@ func (c *client) writePump() {
 		ticker.Stop()
 		c.conn.Close()
 	}()
-	c.publishQueueContentToWebsocket()
+	go c.publishQueueContentToWebsocket()
 	for {
 		select {
 		case message, ok := <-c.send:
