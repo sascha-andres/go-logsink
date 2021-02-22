@@ -16,27 +16,7 @@ func (c *client) writePump() {
 		ticker.Stop()
 		c.conn.Close()
 	}()
-	go func() {
-		for {
-			if c.HasElements() {
-				w, err := c.conn.NextWriter(websocket.TextMessage)
-				if err != nil {
-					break
-				}
-				result, data := c.Dequeue()
-				if !result {
-					continue
-				}
-				w.Write(data)
-
-				if err := w.Close(); err != nil {
-					break
-				}
-				continue
-			}
-			time.Sleep(100 * time.Microsecond)
-		}
-	}()
+	c.publishQueueContentToWebsocket()
 	for {
 		select {
 		case message, ok := <-c.send:
@@ -55,3 +35,4 @@ func (c *client) writePump() {
 		}
 	}
 }
+
