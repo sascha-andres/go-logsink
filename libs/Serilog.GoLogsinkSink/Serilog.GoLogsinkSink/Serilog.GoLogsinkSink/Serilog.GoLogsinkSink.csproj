@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Google.Protobuf" Version="3.15.2" />
+      <PackageReference Include="Grpc.Net.Client" Version="2.35.0" />
+      <PackageReference Include="Grpc.Tools" Version="2.36.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="2.3.0" />
+    </ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="..\..\..\..\v2\logsink\logsink.proto" GrpcServices="Client" />
+	</ItemGroup>
+
+</Project>
