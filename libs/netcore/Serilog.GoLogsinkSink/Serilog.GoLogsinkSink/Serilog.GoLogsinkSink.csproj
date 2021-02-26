@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageVersion>2.2.0-RC1</PackageVersion>
+        <Title>Serilog.GoLogsinkSink</Title>
+        <Authors>Sascha Andres</Authors>
+        <Copyright>(c) Sascha Andres</Copyright>
+        <PackageProjectUrl>https://go-logsink.livingit.de/</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/sascha-andres/go-logsink</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <Company>Sascha Andres</Company>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Google.Protobuf" Version="3.15.2" />
+      <PackageReference Include="Grpc.Net.Client" Version="2.35.0" />
+      <PackageReference Include="Grpc.Tools" Version="2.36.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="2.3.0" />
+    </ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="..\..\..\..\v2\logsink\logsink.proto" GrpcServices="Client" />
+	</ItemGroup>
+
+</Project>
