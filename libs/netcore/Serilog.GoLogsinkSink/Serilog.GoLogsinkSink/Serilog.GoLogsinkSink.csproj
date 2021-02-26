@@ -2,6 +2,15 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageVersion>2.2.0-RC1</PackageVersion>
+        <Title>Serilog.GoLogsinkSink</Title>
+        <Authors>Sascha Andres</Authors>
+        <Copyright>(c) Sascha Andres</Copyright>
+        <PackageProjectUrl>https://go-logsink.livingit.de/</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/sascha-andres/go-logsink</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <Company>Sascha Andres</Company>
     </PropertyGroup>
 
     <ItemGroup>
