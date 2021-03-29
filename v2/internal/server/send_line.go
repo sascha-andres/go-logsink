@@ -17,29 +17,20 @@ package server
 import (
 	"github.com/sascha-andres/go-logsink/v2/logsink"
 	"github.com/sirupsen/logrus"
-	"io"
 )
 
 //SendLine implements logsink.SendLine
 func (s *server) SendLine(stream logsink.LogTransfer_SendLineServer) error {
 	for {
 		in, err := stream.Recv()
-		if err == io.EOF {
-			break
-		}
 		if err != nil {
-			if err != nil {
-				logrus.Warnf("error reading request: %s", err)
-			}
-			break
+			logrus.Warnf("error reading request: %s", err)
+			return stream.SendAndClose(&logsink.LineResult{
+				Result: true,
+			})
 		}
 		logrus.Println(in.Line)
 	}
-	err := stream.SendAndClose(&logsink.LineResult{
-		Result: true,
-	})
-	if err != nil {
-		logrus.Warnf("error sending result: %s", err)
-	}
+	logrus.Warnf("this code should not be reached")
 	return nil
 }

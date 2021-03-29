@@ -16,27 +16,14 @@ package client
 
 import (
 	"context"
-	"fmt"
 	pb "github.com/sascha-andres/go-logsink/v2/logsink"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
-
-	//"github.com/sascha-andres/go-logsink/v2/logsink"
-	//pb "github.com/sascha-andres/go-logsink/v2/logsink"
-	//"github.com/sirupsen/logrus"
-	//"github.com/spf13/viper"
-	//"golang.org/x/net/context"
-	//"google.golang.org/grpc"
 )
 
 //lineSender emits the passed lines over gRPC
 func lineSender(in <-chan string) {
-	//for line := range in {
-	// fmt.Println(line)
-	//}
-	//return
-
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(viper.GetString("connect.address"), grpc.WithInsecure())
 	if err != nil {
@@ -61,14 +48,10 @@ func lineSender(in <-chan string) {
 	}()
 	priority := int32(viper.GetInt("connect.priority"))
 	for line := range in {
-		fmt.Println(line)
+		logrus.Println(line)
 		err = client.Send(&pb.LineMessage{Line: line, Priority: priority})
 		if err != nil {
 			logrus.Warn("received error: %s", err)
 		}
-	}
-	res, err := client.CloseAndRecv()
-	if !(nil != res && res.Result) || nil != err {
-		logrus.Fatalf("error closing and receiving: %s", err)
 	}
 }
