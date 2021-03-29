@@ -1,4 +1,4 @@
-// Copyright © 2017 Sascha Andres <sascha.andres@outlook.com>
+// Copyright © 2021 Sascha Andres <sascha.andres@outlook.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,9 +14,28 @@
 
 package client
 
-import "os"
+import (
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
+	"io"
+	"os"
+)
 
-//Connect is used to connect to a go-logsink server
-func Connect() {
-	lineSender(lineFormatter(lineFilter(lineProducer(os.Stdin))))
+//getReader constructs a reader from stdin or file
+func getReader() (io.Reader, error) {
+	var (
+		reader io.Reader
+		err error
+	)
+	var fileName = viper.GetString("connect.file")
+	if "" != fileName {
+		reader, err = os.Open(fileName)
+		if err != nil {
+			logrus.Fatalf("error opening file: %s", err)
+			return nil, err
+		}
+	} else {
+		reader = os.Stdin
+	}
+	return reader, err
 }

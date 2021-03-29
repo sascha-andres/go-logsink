@@ -12,38 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package client
+package server
 
 import (
-	"fmt"
+	"github.com/sascha-andres/go-logsink/v2/logsink"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
+	"io"
 )
 
-//lineFilter reduces lines to those which are not filtered out
-func lineFilter(in <-chan string) <-chan string {
-	out := make(chan string)
-	go func() {
-		err := setupFilter()
+//SendLine implements logsink.SendLine
+func (s *server) SendLine(stream logsink.LogTransfer_SendLineServer) error {
+	for {
+		in, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
 		if err != nil {
-			logrus.Fatalf("could not setupPrefix filter: %s", err)
-			close(out)
-			return
-		}
-		passThrough := viper.GetBool("connect.pass-through")
-
-		for line := range in {
-			if filtered(line) {
-				continue
+			if err != nil {
+				logrus.Warnf("error reading request: %s", err)
 			}
-			out <- line
-			if passThrough {
-				fmt.Println(line)
-			}
+			break
 		}
-		close(out)
-	}()
-
-	return out
+		logrus.Println(in.Line)
+	}
+	err := stream.SendAndClose(&logsink.LineResult{
+		Result: true,
+	})
+	if err != nil {
+		logrus.Warnf("error sending result: %s", err)
+	}
+	return nil
 }
-

@@ -14,36 +14,18 @@
 
 package client
 
-import (
-	"fmt"
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
-)
+import log "github.com/sirupsen/logrus"
 
-//lineFilter reduces lines to those which are not filtered out
-func lineFilter(in <-chan string) <-chan string {
-	out := make(chan string)
-	go func() {
-		err := setupFilter()
-		if err != nil {
-			logrus.Fatalf("could not setupPrefix filter: %s", err)
-			close(out)
-			return
-		}
-		passThrough := viper.GetBool("connect.pass-through")
+//Connect is used to connect to a go-logsink server
+func Connect() {
+	reader, err := getReader()
+	if err != nil {
+		log.Fatalf("error opening reader: %s", err)
+	}
 
-		for line := range in {
-			if filtered(line) {
-				continue
-			}
-			out <- line
-			if passThrough {
-				fmt.Println(line)
-			}
-		}
-		close(out)
-	}()
-
-	return out
+	lines := lineProducer(reader)
+	filtered := lineFilter(lines)
+	formatted := lineFormatter(filtered)
+	lineSender(formatted)
 }
 
