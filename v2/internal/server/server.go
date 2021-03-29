@@ -18,74 +18,17 @@ import (
 	"github.com/arl/statsviz"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"io"
-	"net"
 	"net/http"
 
 	log "github.com/sirupsen/logrus"
 
 	pb "github.com/sascha-andres/go-logsink/v2/logsink"
 	"github.com/spf13/viper"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 )
 
 // server is used to implement logsink.LogTransferServer.
 type server struct {
 	pb.UnimplementedLogTransferServer
-}
-
-// SendLine implements logsink.SendLine
-func (s *server) SendLine(stream pb.LogTransfer_SendLineServer) error {
-	for {
-		in, err := stream.Recv()
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			if err != nil {
-				log.Warnf("error reading request: %s", err)
-			}
-			err = stream.SendAndClose(&pb.LineResult{
-				Result:               false,
-			})
-			if err != nil {
-				log.Warnf("error sending result: %s", err)
-			}
-			return err
-		}
-		log.Println(in.Line)
-	}
-	err := stream.SendAndClose(&pb.LineResult{
-		Result:               true,
-	})
-	if err != nil {
-		log.Warnf("error sending result: %s", err)
-	}
-	return nil
-}
-
-// Listen starts the server
-func Listen() {
-	log.Printf("Binding definition provided: %s\n", viper.GetString("listen.bind"))
-
-	if viper.GetBool("debug") {
-		go startDebug()
-	}
-
-	lis, err := net.Listen("tcp", viper.GetString("listen.bind"))
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-	s := grpc.NewServer()
-	pb.RegisterLogTransferServer(s, &server{
-		UnimplementedLogTransferServer: pb.UnimplementedLogTransferServer{},
-	})
-	// Register reflection service on gRPC server.
-	reflection.Register(s)
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
 }
 
 func startDebug() {
