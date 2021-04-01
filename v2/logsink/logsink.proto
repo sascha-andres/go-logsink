@@ -8,7 +8,7 @@ option csharp_namespace = "Serilog.GoLogsinkSink";
 /// messages from client to server
 service LogTransfer {
   /// SendLine sends a log line to the server
-  rpc SendLine(stream LineMessage) returns (LineResult) {}
+  rpc SendLine(LineMessage) returns (LineResult) {}
 }
 
 /// The single line message

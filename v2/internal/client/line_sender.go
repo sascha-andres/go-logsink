@@ -36,22 +36,15 @@ func lineSender(in <-chan string) {
 		}
 	}()
 	c := pb.NewLogTransferClient(conn)
-	client, err := c.SendLine(context.Background())
-	if err != nil {
-		logrus.Panicf("error creating client to send log entries: %s", err)
-	}
-	defer func() {
-		res, err := client.CloseAndRecv()
-		if !(nil != res && res.Result) || nil != err {
-			logrus.Fatalf("error closing and receiving: %s", err)
-		}
-	}()
 	priority := int32(viper.GetInt("connect.priority"))
 	for line := range in {
-		logrus.Println(line)
-		err = client.Send(&pb.LineMessage{Line: line, Priority: priority})
+		_, err := c.SendLine(context.Background(), &pb.LineMessage{
+			Line:     line,
+			Priority: priority,
+			Sequence: 0,
+		})
 		if err != nil {
-			logrus.Warn("received error: %s", err)
+			logrus.Warnf("problem sending line: %s", err)
 		}
 	}
 }
