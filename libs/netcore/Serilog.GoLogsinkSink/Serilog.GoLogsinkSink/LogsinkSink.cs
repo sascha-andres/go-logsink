@@ -53,26 +53,19 @@ namespace Serilog.GoLogsinkSink
 
 		protected override async Task EmitBatchAsync(IEnumerable<LogEvent> events)
 		{
-			var client = _transferClient.SendLine();
 			foreach (var logEvent in events)
 			{
 				var textWriter = new StringWriter();
 				_textFormatter.Format(logEvent, textWriter);
 				try
 				{
-					await client.RequestStream.WriteAsync(new LineMessage()
-					{
-						Line = textWriter.ToString(),
-						Priority = 2
-					});
+					await _transferClient.SendLineAsync(new LineMessage() {Line = textWriter.ToString(), Priority = 2});
 				}
 				catch (Exception ex)
 				{
 					Console.WriteLine($"got error: {ex}");
 				}
 			}
-
-			await client.RequestStream.CompleteAsync();
 		}
 
 		protected override void Dispose(bool disposing)
