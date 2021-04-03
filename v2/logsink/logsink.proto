@@ -8,7 +8,7 @@ option csharp_namespace = "Serilog.GoLogsinkSink";
 /// messages from client to server
 service LogTransfer {
   /// SendLine sends a log line to the server
-  rpc SendLine(LineMessage) returns (LineResult) {}
+  rpc SendLine(stream LineMessage) returns (Empty) {}
 }
 
 /// The single line message
@@ -18,7 +18,6 @@ message LineMessage {
 	int64 sequence = 3;
 }
 
-/// Result of the log send
-message LineResult {
-	bool result = 1;
+/// Empty result
+message Empty {
 }

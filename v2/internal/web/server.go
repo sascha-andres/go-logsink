@@ -1,9 +1,10 @@
 package web
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/sirupsen/logrus"
+	"io"
 	"math"
 	"net"
 
@@ -31,28 +32,34 @@ type (
 )
 
 // SendLine implements logsink.SendLine
-func (s *server) SendLine(context context.Context, in *pb.LineMessage) (*pb.LineResult, error) {
-	_ = context
+func (s *server) SendLine(stream pb.LogTransfer_SendLineServer) error {
+	for {
+		in, err := stream.Recv()
+		if err == io.EOF {
+			return stream.SendAndClose(&pb.Empty{})
+		}
+		if err != nil {
+			logrus.Warnf("error reading request: %#v", err)
+			return stream.SendAndClose(&pb.Empty{})
+		}
 
-	numberOfLines.Inc()
-	breakAt := viper.GetInt("web.break")
-	priority := int32(math.Max(0, math.Min(9, float64(in.Priority))))
+		numberOfLines.Inc()
+		breakAt := viper.GetInt("web.break")
+		priority := int32(math.Max(0, math.Min(9, float64(in.Priority))))
 
-	if viper.GetBool("debug") {
-		fmt.Println(in.Line)
-	}
-	if breakAt == 0 {
-		s.broadcastLine(in.Line, priority)
-	} else {
-		iterations := int(len(in.Line) / breakAt)
-		for start := 0; start <= iterations; start++ {
-			s.broadcastLine(in.Line[start*breakAt:int32(math.Min(float64((start+1)*breakAt), float64(len(in.Line))))], priority)
+		if viper.GetBool("debug") {
+			fmt.Println(in.Line)
+		}
+		if breakAt == 0 {
+			s.broadcastLine(in.Line, priority)
+		} else {
+			iterations := int(len(in.Line) / breakAt)
+			for start := 0; start <= iterations; start++ {
+				s.broadcastLine(in.Line[start*breakAt:int32(math.Min(float64((start+1)*breakAt), float64(len(in.Line))))], priority)
+			}
 		}
 	}
-
-	return &pb.LineResult{
-		Result: true,
-	}, nil
+	return stream.SendAndClose(&pb.Empty{})
 }
 
 func (s *server) broadcastLine(line string, priority int32) {

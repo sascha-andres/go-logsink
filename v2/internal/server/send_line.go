@@ -15,19 +15,23 @@
 package server
 
 import (
-	"context"
 	pb "github.com/sascha-andres/go-logsink/v2/logsink"
 	"github.com/sirupsen/logrus"
+	"io"
 )
 
 //SendLine implements logsink.SendLine
-// SendLine implements logsink.SendLine
-func (s *server) SendLine(context context.Context, in *pb.LineMessage) (*pb.LineResult, error) {
-	logrus.Println(in.Line)
-
-	_ = context
-
-	return &pb.LineResult{
-		Result: true,
-	}, nil
+func (s *server) SendLine(stream pb.LogTransfer_SendLineServer) error {
+	for {
+		in, err := stream.Recv()
+		if err == io.EOF {
+			return stream.SendAndClose(&pb.Empty{})
+		}
+		if err != nil {
+			logrus.Warnf("error reading request: %s", err)
+			return stream.SendAndClose(&pb.Empty{})
+		}
+		logrus.Println(in.Line) // prints only the first message
+	}
+	return stream.SendAndClose(&pb.Empty{})
 }

@@ -27,24 +27,31 @@ func lineSender(in <-chan string) {
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(viper.GetString("connect.address"), grpc.WithInsecure())
 	if err != nil {
-		logrus.Fatalf("could not connect: %s", err)
+		logrus.Fatalf("could not dial to gRPC server: %s", err)
 	}
 	defer func() {
-		err := conn.Close()
+		err = conn.Close()
 		if err != nil {
-			logrus.Fatalf("error closing: %s", err)
+			logrus.Fatalf("could not close connection to gRPC server: %s", err)
 		}
 	}()
 	c := pb.NewLogTransferClient(conn)
+	client, err := c.SendLine(context.Background())
+	if err != nil {
+		logrus.Fatalf("could not construct client: %s", err)
+	}
+	defer func() {
+		_, err := client.CloseAndRecv()
+		if err != nil {
+			logrus.Fatal("could not close and receive from client: %s", err)
+		}
+	}()
 	priority := int32(viper.GetInt("connect.priority"))
 	for line := range in {
-		_, err := c.SendLine(context.Background(), &pb.LineMessage{
-			Line:     line,
-			Priority: priority,
-			Sequence: 0,
-		})
+		// logrus.Println(line) // all lines printed
+		err = client.Send(&pb.LineMessage{Line: line, Priority: priority})
 		if err != nil {
-			logrus.Warnf("problem sending line: %s", err)
+			logrus.Warnf("error sending line: %s", err)
 		}
 	}
 }
