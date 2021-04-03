@@ -14,7 +14,7 @@
 package cmd
 
 import (
-	"github.com/sascha-andres/go-logsink/v2/internal/server"
+	"github.com/sascha-andres/go-logsink/v2/internal/console"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -28,7 +28,7 @@ Call it to have clients forward log messages here.
 
 If debug mode is enable you call open /debug/statsviz/ in your browser`,
 	Run: func(cmd *cobra.Command, args []string) {
-		handleLock(server.Listen)
+		handleLock(console.Listen)
 	},
 }
 

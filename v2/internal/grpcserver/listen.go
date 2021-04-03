@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package server
+package grpcserver
 
 import (
 	"github.com/sascha-andres/go-logsink/v2/logsink"
@@ -23,8 +23,8 @@ import (
 	"net"
 )
 
-// Listen starts the server
-func Listen() {
+// Listen starts the Server
+func Listen(out chan string) {
 	logrus.Printf("Binding definition provided: %s\n", viper.GetString("listen.bind"))
 
 	if viper.GetBool("debug") {
@@ -36,10 +36,8 @@ func Listen() {
 		logrus.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	logsink.RegisterLogTransferServer(s, &server{
-		UnimplementedLogTransferServer: logsink.UnimplementedLogTransferServer{},
-	})
-	// Register reflection service on gRPC server.
+	logsink.RegisterLogTransferServer(s, NewServer(out))
+	// Register reflection service on gRPC Server.
 	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {
 		logrus.Fatalf("failed to serve: %v", err)

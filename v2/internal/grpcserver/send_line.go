@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package server
+package grpcserver
 
 import (
 	pb "github.com/sascha-andres/go-logsink/v2/logsink"
@@ -21,7 +21,7 @@ import (
 )
 
 //SendLine implements logsink.SendLine
-func (s *server) SendLine(stream pb.LogTransfer_SendLineServer) error {
+func (s *Server) SendLine(stream pb.LogTransfer_SendLineServer) error {
 	for {
 		in, err := stream.Recv()
 		if err == io.EOF {
@@ -31,7 +31,7 @@ func (s *server) SendLine(stream pb.LogTransfer_SendLineServer) error {
 			logrus.Warnf("error reading request: %s", err)
 			return stream.SendAndClose(&pb.Empty{})
 		}
-		logrus.Println(in.Line) // prints only the first message
+		s.output <- in.Line
 	}
 	return stream.SendAndClose(&pb.Empty{})
 }
