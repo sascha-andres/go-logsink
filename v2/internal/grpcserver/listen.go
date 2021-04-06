@@ -15,7 +15,7 @@
 package grpcserver
 
 import (
-	"github.com/sascha-andres/go-logsink/v2/logsink"
+	pb "github.com/sascha-andres/go-logsink/v2/logsink"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
@@ -24,7 +24,7 @@ import (
 )
 
 // Listen starts the Server
-func Listen(out chan string) {
+func Listen(out chan *pb.LineMessage) {
 	logrus.Printf("Binding definition provided: %s\n", viper.GetString("listen.bind"))
 
 	if viper.GetBool("debug") {
@@ -36,7 +36,7 @@ func Listen(out chan string) {
 		logrus.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	logsink.RegisterLogTransferServer(s, NewServer(out))
+	pb.RegisterLogTransferServer(s, NewServer(out))
 	// Register reflection service on gRPC Server.
 	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {

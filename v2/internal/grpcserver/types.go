@@ -22,7 +22,7 @@ type (
 	// Server is used to implement logsink.LogTransferServer.
 	Server struct {
 		pb.UnimplementedLogTransferServer
-		output chan<- string
+		output chan<- *pb.LineMessage
 	}
 )
 

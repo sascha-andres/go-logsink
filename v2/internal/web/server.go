@@ -1,19 +1,7 @@
 package web
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/sirupsen/logrus"
-	"io"
-	"math"
-	"net"
-
-	log "github.com/sirupsen/logrus"
-
-	"github.com/spf13/viper"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
-
+	"github.com/sascha-andres/go-logsink/v2/internal/grpcserver"
 	pb "github.com/sascha-andres/go-logsink/v2/logsink"
 )
 
@@ -31,67 +19,7 @@ type (
 	}
 )
 
-// SendLine implements logsink.SendLine
-func (s *server) SendLine(stream pb.LogTransfer_SendLineServer) error {
-	for {
-		in, err := stream.Recv()
-		if err == io.EOF {
-			return stream.SendAndClose(&pb.Empty{})
-		}
-		if err != nil {
-			logrus.Warnf("error reading request: %#v", err)
-			return stream.SendAndClose(&pb.Empty{})
-		}
-
-		numberOfLines.Inc()
-		breakAt := viper.GetInt("web.break")
-		priority := int32(math.Max(0, math.Min(9, float64(in.Priority))))
-
-		if viper.GetBool("debug") {
-			fmt.Println(in.Line)
-		}
-		if breakAt == 0 {
-			s.broadcastLine(in.Line, priority)
-		} else {
-			iterations := int(len(in.Line) / breakAt)
-			for start := 0; start <= iterations; start++ {
-				s.broadcastLine(in.Line[start*breakAt:int32(math.Min(float64((start+1)*breakAt), float64(len(in.Line))))], priority)
-			}
-		}
-	}
-	return stream.SendAndClose(&pb.Empty{})
-}
-
-func (s *server) broadcastLine(line string, priority int32) {
-	s.numberOfLines++
-	obj := lineType{
-		Line:     line,
-		Priority: priority,
-		Key:      fmt.Sprintf("%d", s.numberOfLines),
-	}
-	if line == "" {
-		obj.Line = " "
-	}
-	data, err := json.Marshal(obj)
-	if err != nil {
-		log.Errorf("error creating message for websocket: %s", err)
-	} else {
-		s.hub.broadcast <- data
-	}
-}
-
-func (s *server) run() {
-	s.hub = newHub()
+func (s *server) run(out chan *pb.LineMessage) {
 	go s.hub.run()
-	lis, err := net.Listen("tcp", viper.GetString("web.bind"))
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-	srv := grpc.NewServer()
-	pb.RegisterLogTransferServer(srv, s)
-	// Register reflection service on gRPC server.
-	reflection.Register(srv)
-	if err := srv.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
+	grpcserver.Listen(out)
 }
