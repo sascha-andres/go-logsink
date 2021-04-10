@@ -7,6 +7,7 @@ require (
 	github.com/beorn7/perks v0.0.0-20160804104726-4c0e84591b9a // indirect
 	github.com/cpuguy83/go-md2man v1.0.10 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/fatih/color v1.10.0
 	github.com/fsnotify/fsnotify v1.4.3-0.20161026203122-fd9ec7deca8b // indirect
 	github.com/golang/protobuf v1.4.3
 	github.com/google/gops v0.3.2-0.20170319002943-62f833fc9f6c
@@ -36,7 +37,7 @@ require (
 	github.com/spf13/viper v0.0.0-20161213093849-5ed0fc31f7f4
 	github.com/stretchr/testify v1.6.1 // indirect
 	go.starlark.net v0.0.0-20201014215153-dff0ae5b4820
-	golang.org/x/net v0.0.0-20201026091529-146b70c837a4
+	golang.org/x/net v0.0.0-20201026091529-146b70c837a4 // indirect
 	golang.org/x/sys v0.0.0-20201026173827-119d4633e4d1 // indirect
 	google.golang.org/genproto v0.0.0-20201026171402-d4b8fe4fd877 // indirect
 	google.golang.org/grpc v1.33.1

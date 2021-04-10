@@ -34,6 +34,8 @@ If debug mode is enable you call open /debug/statsviz/ in your browser`,
 
 func init() {
 	RootCmd.AddCommand(listenCmd)
+	listenCmd.Flags().BoolP("colored", "c", true, "Print messages colored")
 	listenCmd.Flags().StringP("bind", "b", ":50051", "Provide bind definition")
-	viper.BindPFlag("listen.bind", listenCmd.Flags().Lookup("bind"))
+	_ = viper.BindPFlag("listen.bind", listenCmd.Flags().Lookup("bind"))
+	_ = viper.BindPFlag("listen.colored", listenCmd.Flags().Lookup("colored"))
 }
