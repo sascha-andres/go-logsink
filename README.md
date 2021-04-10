@@ -61,6 +61,10 @@ Rudimentary tests were done, no in depth testing, though
 
 |Version|Description|
 |---|---|
+|v2.1.0|refactored to improve overall quality|
+||(BETA) Serilog sink|
+||colored console output|
+||streaming gRPC|
 |v2.0.0|new ui based on vue.js|
 ||removed options for client side code|
 ||add option to load ui from local path|
