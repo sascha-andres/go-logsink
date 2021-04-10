@@ -12,22 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package server
+package grpcserver
 
 import (
-	"context"
 	pb "github.com/sascha-andres/go-logsink/v2/logsink"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
+	"net"
 )
 
-//SendLine implements logsink.SendLine
-// SendLine implements logsink.SendLine
-func (s *server) SendLine(context context.Context, in *pb.LineMessage) (*pb.LineResult, error) {
-	logrus.Println(in.Line)
+// Listen starts the Server
+func Listen(out chan *pb.LineMessage) {
+	logrus.Printf("Binding definition provided: %s\n", viper.GetString("listen.bind"))
 
-	_ = context
+	if viper.GetBool("debug") {
+		go startDebug()
+	}
 
-	return &pb.LineResult{
-		Result: true,
-	}, nil
+	lis, err := net.Listen("tcp", viper.GetString("listen.bind"))
+	if err != nil {
+		logrus.Fatalf("failed to listen: %v", err)
+	}
+	s := grpc.NewServer()
+	pb.RegisterLogTransferServer(s, NewServer(out))
+	// Register reflection service on gRPC Server.
+	reflection.Register(s)
+	if err := s.Serve(lis); err != nil {
+		logrus.Fatalf("failed to serve: %v", err)
+	}
 }
