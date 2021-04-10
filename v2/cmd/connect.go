@@ -15,7 +15,7 @@
 package cmd
 
 import (
-	"github.com/sascha-andres/go-logsink/v2/client"
+	client2 "github.com/sascha-andres/go-logsink/v2/internal/client"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -34,19 +34,21 @@ If you want to filter the function maust be named filter and return a bool:
 
 The above filter function will not print lines starting with the letter a (lowercase)`,
 	Run: func(cmd *cobra.Command, args []string) {
-		handleLock(client.Connect)
+		handleLock(client2.Connect)
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(connectCmd)
 	connectCmd.Flags().StringP("address", "a", "localhost:50051", "Provide server address")
+	connectCmd.Flags().StringP("file", "f", "", "Read a file to pass")
 	connectCmd.Flags().StringP("prefix", "p", "", "Provide a prefix for each line")
 	connectCmd.Flags().IntP("priority", "", 0, "Priority of message")
 	connectCmd.Flags().BoolP("pass-through", "", false, "Print lines to stdout")
 	connectCmd.Flags().StringP("filter-function", "", "", "Provide path to starlark file to filter lines")
 
 	_ = viper.BindPFlag("connect.address", connectCmd.Flags().Lookup("address"))
+	_ = viper.BindPFlag("connect.file", connectCmd.Flags().Lookup("file"))
 	_ = viper.BindPFlag("connect.prefix", connectCmd.Flags().Lookup("prefix"))
 	_ = viper.BindPFlag("connect.priority", connectCmd.Flags().Lookup("priority"))
 	_ = viper.BindPFlag("connect.pass-through", connectCmd.Flags().Lookup("pass-through"))

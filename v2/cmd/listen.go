@@ -14,7 +14,7 @@
 package cmd
 
 import (
-	"github.com/sascha-andres/go-logsink/v2/server"
+	"github.com/sascha-andres/go-logsink/v2/internal/console"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -24,14 +24,18 @@ var listenCmd = &cobra.Command{
 	Use:   "listen",
 	Short: "Start a server instance of go-logsink",
 	Long: `This command is used to create a go-logsink server.
-Call it to have clients forward log messages here.`,
+Call it to have clients forward log messages here.
+
+If debug mode is enable you call open /debug/statsviz/ in your browser`,
 	Run: func(cmd *cobra.Command, args []string) {
-		handleLock(server.Listen)
+		handleLock(console.Listen)
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(listenCmd)
+	listenCmd.Flags().BoolP("colored", "c", true, "Print messages colored")
 	listenCmd.Flags().StringP("bind", "b", ":50051", "Provide bind definition")
-	viper.BindPFlag("listen.bind", listenCmd.Flags().Lookup("bind"))
+	_ = viper.BindPFlag("listen.bind", listenCmd.Flags().Lookup("bind"))
+	_ = viper.BindPFlag("listen.colored", listenCmd.Flags().Lookup("colored"))
 }

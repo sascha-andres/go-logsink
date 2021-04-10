@@ -6,7 +6,7 @@ require (
 	github.com/beorn7/perks v0.0.0-20160804104726-4c0e84591b9a
 	github.com/cpuguy83/go-md2man v1.0.10
 	github.com/fsnotify/fsnotify v1.4.3-0.20161026203122-fd9ec7deca8b
-	github.com/golang/protobuf v1.3.2
+	github.com/golang/protobuf v1.4.3
 	github.com/google/gops v0.3.2-0.20170319002943-62f833fc9f6c
 	github.com/gorilla/context v1.1.1
 	github.com/gorilla/handlers v0.0.0-20161206055144-3a5767ca75ec
@@ -22,7 +22,7 @@ require (
 	github.com/pelletier/go-buffruneio v0.1.0
 	github.com/pelletier/go-toml v0.4.1-0.20161229185104-439fbba1f887
 	github.com/prometheus/client_golang v0.8.1-0.20170511141251-42552c195dd3
-	github.com/prometheus/client_model v0.0.0-20170216185247-6f3806018612
+	github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4
 	github.com/prometheus/common v0.0.0-20170731114204-61f87aac8082
 	github.com/prometheus/procfs v0.0.0-20170502131342-d098ca18df8b
 	github.com/rakyll/statik v0.1.1-0.20170410192944-89fe3459b5c8
@@ -34,10 +34,12 @@ require (
 	github.com/spf13/jwalterweatherman v0.0.0-20170105105509-bccdd23ae5e5
 	github.com/spf13/pflag v0.0.0-20161214044949-25f8b5b07aec
 	github.com/spf13/viper v0.0.0-20161213093849-5ed0fc31f7f4
-	golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
-	golang.org/x/net v0.0.0-20190311183353-d8887717615a
-	golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a
-	golang.org/x/text v0.3.0
-	google.golang.org/grpc v1.24.0
+	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
+	golang.org/x/net v0.0.0-20201026091529-146b70c837a4
+	golang.org/x/sys v0.0.0-20201026173827-119d4633e4d1
+	golang.org/x/text v0.3.3
+	google.golang.org/genproto v0.0.0-20201026171402-d4b8fe4fd877 // indirect
+	google.golang.org/grpc v1.33.1
+	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/yaml.v2 v2.0.0-20160928153709-a5b47d31c556
 )
