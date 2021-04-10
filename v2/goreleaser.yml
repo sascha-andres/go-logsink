@@ -1,0 +1,11 @@
+build:
+  binary: go-logsink
+  goos:
+    - windows
+    - darwin
+    - linux
+  goarch:
+    - amd64
+
+release:
+  draft: true
