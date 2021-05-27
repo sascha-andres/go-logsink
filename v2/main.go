@@ -25,7 +25,7 @@ var version string = "develop"
 
 func main() {
 	log.Printf("go-logsink version %s", version)
-	if err := agent.Listen(nil); err != nil {
+	if err := agent.Listen(&agent.Options{}); err != nil {
 		log.Fatal(err)
 	}
 	cmd.Execute()
