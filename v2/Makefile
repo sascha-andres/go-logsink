@@ -82,6 +82,14 @@ protobuf: ## run protobuf stuff
 	../check_protobuf.sh
 	protoc -I logsink/ logsink/logsink.proto --go_out=plugins=grpc:logsink
 
+appimage: linux ## generate app image
+	-rm -rf go-logsink.AppDir
+	mkdir -p go-logsink.AppDir/usr/bin/
+	cp go-logsink go-logsink.AppDir/usr/bin/
+	cp go-logsink.png go-logsink.AppDir/
+	cp go-logsink.desktop go-logsink.AppDir/
+	cp AppRun go-logsink.AppDir/
+
 ui:       ## create ui
 	cd ui && npm install
 	cd ui && npm rebuild node-sass
