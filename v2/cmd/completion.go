@@ -10,7 +10,7 @@ import (
 var completionCmd = &cobra.Command{
 	Use:   "completion",
 	Short: "Generate completion for shell",
-	Long: `TTo load completions:
+	Long: `To load completions:
 
 Bash:
 

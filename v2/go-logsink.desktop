@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=go-logsink
+Exec=go-logsink
+Icon=go-logsink
+Type=Application
+Categories=Utility;
