@@ -2,7 +2,7 @@ GOCMD=go
 GOTEST=$(GOCMD) test
 GOVET=$(GOCMD) vet
 BINARY_NAME=go-logsink
-VERSION?=2.1.0
+VERSION?=2.1.1
 SERVICE_PORT?=3000
 DOCKER_REGISTRY?=briefbote/
 EXPORT_RESULT?=false # for CI please set EXPORT_RESULT to true
@@ -91,13 +91,13 @@ appimage: linux ## generate app image
 	cp AppRun go-logsink.AppDir/
 
 ui:       ## create ui
-	cd ui && npm install
+	cd ui && npm ci
 	cd ui && npm rebuild node-sass
 	cd ui && npm run build
 	-rm -rf internal/web/dist
 	cp -R ui/dist internal/web
 
-ci: ui linux osx windows ## run to create everything
+ci: ui appimage osx windows ## run to create everything
 
 docs: ## generate docs
 	@go run main.go doc
