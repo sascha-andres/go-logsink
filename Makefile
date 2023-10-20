@@ -9,7 +9,4 @@ protobuf:
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
 	protoc -I logsink/ logsink/logsink.proto --go-grpc_out=. --go_out=.
-statik:
-	-rm web/statik/statik.go
-	cd web && statik -src=../www
 all: linux osx windows
