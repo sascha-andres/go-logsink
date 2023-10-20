@@ -39,9 +39,8 @@ clean: ## remove generated files
 	-rm go-logsink
 	-rm go-logsink.exe
 	-rm go-logsink.osx
-	-rm -rf ui/node_modules
-	-rm -rf ui/dist
-	-rm -rf internal/web/dist
+	-rm go-logsink.amd64.osx
+	-rm go-logsink.arm64.osx
 
 test: ## Run tests
 ifeq ($(EXPORT_RESULT), true)
@@ -73,23 +72,19 @@ linux: docs    ## build for linux
 	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-s' -o go-logsink
 
 osx: docs      ## build for osx
-	CGO_ENABLED=0 GOOS=darwin go build -a -ldflags '-s' -o go-logsink.osx
+	CGO_ENABLED=0 GOOS=darwin go build -a -ldflags '-s' -o go-logsink.amd64.osx
+	CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -a -ldflags '-s' -o go-logsink.arm64.osx
 
 windows: docs  ## build for windows
 	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -a -ldflags '-s' -o go-logsink.exe
 
 protobuf: ## run protobuf stuff
-	../check_protobuf.sh
-	protoc -I logsink/ logsink/logsink.proto --go_out=plugins=grpc:logsink
+	./check_protobuf.sh
+	go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
+	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
+	protoc -I logsink/ logsink/logsink.proto --go-grpc_out=. --go_out=.
 
-ui:       ## create ui
-	cd ui && npm install
-	cd ui && npm rebuild node-sass
-	cd ui && npm run build
-	-rm -rf internal/web/dist
-	cp -R ui/dist internal/web
-
-ci: ui linux osx windows ## run to create everything
+ci: linux osx windows ## run to create everything
 
 docs: ## generate docs
 	@go run main.go doc

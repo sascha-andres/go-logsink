@@ -43,7 +43,7 @@ func lineSender(in <-chan string) {
 	defer func() {
 		_, err := client.CloseAndRecv()
 		if err != nil {
-			logrus.Fatal("could not close and receive from client: %s", err)
+			logrus.Fatalf("could not close and receive from client: %s", err)
 		}
 	}()
 	priority := int32(viper.GetInt("connect.priority"))
@@ -51,7 +51,7 @@ func lineSender(in <-chan string) {
 		// logrus.Println(line) // all lines printed
 		err = client.Send(&pb.LineMessage{Line: line, Priority: priority})
 		if err != nil {
-			logrus.Warnf("error sending line: %s", err)
+			logrus.Warnf("error sending line: %f", err)
 		}
 	}
 }

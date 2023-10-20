@@ -3,6 +3,8 @@ syntax = "proto3";
 
 package logsink;
 
+option go_package = "./logsink";
+
 /// LogTransfer service defines the method(s) used to send
 /// messages from client to server
 service LogTransfer {

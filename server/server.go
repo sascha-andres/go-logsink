@@ -27,7 +27,9 @@ import (
 )
 
 // server is used to implement logsink.LogTransferServer.
-type server struct{}
+type server struct{
+	pb.UnimplementedLogTransferServer
+}
 
 // SendLine implements logsink.SendLine
 func (s *server) SendLine(ctx context.Context, in *pb.LineMessage) (*pb.LineResult, error) {
