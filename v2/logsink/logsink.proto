@@ -3,6 +3,7 @@ syntax = "proto3";
 
 package logsink;
 option csharp_namespace = "Serilog.GoLogsinkSink";
+option go_package = "./logsink";
 
 /// LogTransfer service defines the method(s) used to send
 /// messages from client to server

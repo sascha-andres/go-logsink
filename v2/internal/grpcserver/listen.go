@@ -27,10 +27,6 @@ import (
 func Listen(out chan *pb.LineMessage) {
 	logrus.Printf("Binding definition provided: %s\n", viper.GetString("listen.bind"))
 
-	if viper.GetBool("debug") {
-		go startDebug()
-	}
-
 	lis, err := net.Listen("tcp", viper.GetString("listen.bind"))
 	if err != nil {
 		logrus.Fatalf("failed to listen: %v", err)
