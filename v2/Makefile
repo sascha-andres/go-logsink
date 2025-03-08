@@ -80,8 +80,8 @@ windows: docs  ## build for windows
 
 protobuf: ## run protobuf stuff
 	./check_protobuf.sh
-	go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
-	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
+	go install google.golang.org/protobuf/cmd/protoc-gen-go
+	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
 	protoc -I logsink/ logsink/logsink.proto --go-grpc_out=. --go_out=.
 
 ci: linux osx windows ## run to create everything
