@@ -29,8 +29,6 @@ builds:
       - linux
       - windows
       - darwin
-      - darwin
-
 
 archives:
   - formats: [ "tar.gz" ]
