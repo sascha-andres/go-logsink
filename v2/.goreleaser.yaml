@@ -57,14 +57,11 @@ changelog:
 release:
   github:
     owner: sascha-andres
-    name: lockutil
+    name: go-logsink
   draft: true
   replace_existing_draft: true
   use_existing_draft: true
   replace_existing_artifacts: true
-  extra_files:
-    - glob: ./README.md
-    - glob: ./systemctl/lockd.service
   footer: >-
 
     ---
